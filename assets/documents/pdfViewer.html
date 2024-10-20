@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>PDF Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        #canvasContainer { width: 100vw; height: 90vh; overflow: auto; }
+        canvas { display: block; margin: auto; }
+        #error { color: red; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div id="canvasContainer"></div>
+    <div id="error"></div>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js';
+        
+        const loadPdf = async () => {
+            try {
+                // Este PDF debería permitir CORS
+                const pdfUrl = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf';
+                console.log('Iniciando carga del PDF:', pdfUrl);
+                const loadingTask = pdfjsLib.getDocument(pdfUrl);
+                const pdf = await loadingTask.promise;
+                console.log('PDF cargado, número de páginas:', pdf.numPages);
+                const page = await pdf.getPage(1);
+                console.log('Página 1 cargada');
+                
+                const scale = 1.5;
+                const viewport = page.getViewport({ scale });
+                
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                
+                await page.render(renderContext);
+                console.log('Página renderizada');
+                
+                document.getElementById('canvasContainer').appendChild(canvas);
+            } catch (error) {
+                console.error('Error al cargar el PDF:', error);
+                document.getElementById('error').innerHTML = 'Error al cargar el PDF: ' + error.message + '<br>Stack: ' + error.stack;
+            }
+        };
+        
+        loadPdf();
+    </script>
+</body>
+</html>

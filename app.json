@@ -18,10 +18,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": ["INTERNET"],
+      "package": "com.albinr3.Amadita"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7263b080-1358-4e54-a601-f6f6e5f0c427"
+      }
     }
   }
 }
