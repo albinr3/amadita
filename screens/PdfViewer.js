@@ -3,7 +3,7 @@ import { View, Button, StyleSheet, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 const PdfViewer = () => {
-  const [pdfUrl, setPdfUrl] = useState('https://tmpfiles.org/14594865/0259121153030394-2024-10-20t23-07-06.867z.pdf');
+  const [pdfUrl, setPdfUrl] = useState('https://github.com/albinr3/amadita/blob/6e6af7bb8e75e36079eea258dc008a98c8f57c3c/assets/documents/analisis.pdf');
   const [error, setError] = useState(null);
   const webViewRef = useRef(null);
 
