@@ -5,10 +5,16 @@ import { useFonts, Roboto_400Regular, Roboto_700Bold, Roboto_500Medium } from '@
 import { Image } from 'expo-image';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from "react";
+import { ref, listAll, getDownloadURL } from 'firebase/storage';
+import { FIREBASE_STORAGE } from "../firebaseConfig";
+import { signOut } from "firebase/auth";
+import { FIREBASE_AUTH } from "../firebaseConfig";
 
-export default function Home({navigation}) {
+export default function Home(props) {
+  
+  
   SplashScreen.preventAutoHideAsync();
-
+  
   const [loaded, error] = useFonts({
     Roboto_400Regular,
     Roboto_700Bold,
@@ -24,26 +30,47 @@ export default function Home({navigation}) {
   if (!loaded && !error) {
     return null;
   }
+
+  const navigation = props.navigation;
+  const user = props.route?.params?.user || props.user.dataUser;
+  //si viene de Registration utilizara la primera y si viene de AppNavigation(de estar logueado) usara la segunda
+ 
+
+  const functionSignOut = () => {
+    signOut(FIREBASE_AUTH).then(() => {
+      // Sign-out successful.
+      console.log("Sign out successful");
+      navigation.navigate("Login");
+    }).catch((error) => {
+      // An error happened.
+      console.error('Sign-out error:', error);
+    });
+  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.configIconRow}>
-          <Feather name="settings" style={styles.configIcon}></Feather>
+          <Pressable onPress={()=>functionSignOut()}>
+            <Feather name="settings" style={styles.configIcon}></Feather>
+          </Pressable>
           <Image
             source={require("../assets/images/amadita.png")}
             contentFit="contain"
             style={styles.logo}
           ></Image>
+          
           <Feather
             name="bell"
             style={styles.notificationIcon}
           ></Feather>
+          
+          
         </View>
       </View>
       <View style={styles.rect2}>
         <View style={styles.viewSaludo}>
           <View style={styles.holaSofiaStack}>
-            <Text style={styles.holaSofia}>Hola Sofia</Text>
+            <Text style={styles.holaSofia}>Hola {user.fullName}</Text>
             <Text style={styles.text}>En que te podemos ayudar?</Text>
           </View>
         </View>

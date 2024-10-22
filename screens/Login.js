@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 //import { KeyboardAdwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import styles from "./styles";
+import { StyleSheet } from 'react-native'
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
@@ -18,7 +18,7 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const onFooterLinkPress = () => {
-    navigation.navigate("Registration");
+    navigation.navigate("RegistrationScreen");
   };
 
   const onLoginPress = async () => {
@@ -31,12 +31,10 @@ export default function Login({ navigation }) {
         password
       );
       // Signed in
-      
-        navigation.navigate("Home");
-        setEmail("");
-        setPassword("");
-      
-      
+
+      navigation.navigate("Home");
+      setEmail("");
+      setPassword("");
     } catch (error) {
       alert("User and password are incorrect or user does not exist");
       console.error("Error when logging in", error);
@@ -70,7 +68,7 @@ export default function Login({ navigation }) {
       />
       {/* Display loading indicator or registration button based on isLoading state */}
       {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="rgba(253,72,122,1)" />
       ) : (
         <Pressable style={styles.button} onPress={() => onLoginPress()}>
           <Text style={styles.buttonTitle}>Log in</Text>
@@ -87,3 +85,64 @@ export default function Login({ navigation }) {
     </View>
   );
 }
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: "center"
+  },
+  title: {
+  
+  },
+  logo: {
+    
+    height: 120,
+    width: 210,
+    alignSelf: "center",
+    margin: 30
+  },
+  input: {
+    height: 48,
+    width: "80%",
+    borderRadius: 5,
+    overflow: 'hidden',
+    backgroundColor: 'white',
+    marginTop: 10,
+    marginBottom: 10,
+    
+    paddingLeft: 16
+  },
+  button: {
+    backgroundColor: 'rgba(253,72,122,1)',
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 20,
+    height: 48,
+    width: "80%",
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  buttonTitle: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  footerView: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 20
+  },
+  footerText: {
+    fontSize: 16,
+    color: '#2e2e2d'
+  },
+  footerLink: {
+    color: 'rgba(253,72,122,1)',
+    fontWeight: 'bold',
+    fontSize: 16
+  }
+})

@@ -7,19 +7,20 @@ function Analisis({ navigation }) {
       <View style={styles.containerText}>
         <Text>Pruebas</Text>
       </View>
-      <View style={styles.containerPrueba}>
-        <Pressable
-          onPress={() => navigation.navigate("PdfViewer")}
+      <Pressable 
+      onPress={() => navigation.navigate("PdfViewer")}
+      style={styles.containerPrueba}>
+        <View
           style={styles.botonPrueba}
         >
           <Text style={styles.textoPrueba}>
             COPROLOGICO, HEMOGRAMA, SGOT
           </Text>
-        </Pressable>
+        </View>
         <View style={styles.viewLogo}>
           <Icon name="arrow-right-circle-outline" style={styles.icon}></Icon>
         </View>
-      </View>
+      </Pressable>
     </View>
   );
 }

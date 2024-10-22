@@ -1,7 +1,36 @@
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { useEffect } from "react";
+import { ref, listAll, getDownloadURL } from 'firebase/storage';
+import { FIREBASE_STORAGE } from "../firebaseConfig";
 
 function Results({navigation}) {
+  // Función para listar todos los archivos y mostrarlos en la consola
+  const fetchFiles = async () => {
+    const storageRef = ref(FIREBASE_STORAGE, '/');  // Carpeta desde donde quieres listar los archivos
+
+    try {
+      const result = await listAll(storageRef);
+
+      // Obtener las URLs de los archivos y mostrarlas en la consola
+      result.items.forEach(async (itemRef) => {
+        const url = await getDownloadURL(itemRef);
+        console.log(`Archivo: ${itemRef.name} - URL: ${url}`);
+      });
+    } catch (error) {
+      console.log('Error al listar los archivos:', error);
+    }
+  };
+
+
+    
+  
+    useEffect(() => {
+      fetchFiles();// Ejecutar la función cuando el componente se monte
+    }, []);
+  
+   
+  
   return (
     <View style={styles.screen}>
     <View style={styles.container}>
