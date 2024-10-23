@@ -13,13 +13,13 @@ function Analisis({ navigation, route }) {
   const { user, setUser } = useContext(UserContext); // Acceder al usuario desde el contexto
   const { analisis, setAnalisis } = useContext(UserContext); // Acceder al usuario desde el contexto
 
-  console.log("desde analisis: ", user)
+  console.log("desde analisis1: ", user)
    // Effect hook to handle user authentication state changes
    useEffect(() => {
     // Subscribe to authentication state changes using Firebase Auth
     const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (userData) => {
       if (userData) {
-        console.log("tessttssss: ", userData)
+       
         const usersCollection = collection(FIREBASE_DB, "analisis");
         const q = query(usersCollection, where("analisisData.userId", "==", userData.uid)); 
 
@@ -35,7 +35,7 @@ function Analisis({ navigation, route }) {
   
           // Si se encontró, puedes acceder a los datos
           querySnapshot.forEach((doc) => {
-              console.log(`from navigation: `, doc.data().analisisData);
+              console.log(`from analisis: `, doc.data().analisisData);
               setAnalisis(doc.data().analisisData); // Almacena el usuario si es necesario
           });
 
@@ -73,7 +73,7 @@ function Analisis({ navigation, route }) {
           style={styles.botonPrueba}
         >
           <Text style={styles.textoPrueba}>
-            {analisis.text}
+            {analisis.text.analisis1}
           </Text>
         </View>
         <View style={styles.viewLogo}>

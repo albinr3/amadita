@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Image,
   ActivityIndicator,
@@ -12,17 +12,19 @@ import { StyleSheet } from 'react-native'
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
+import { UserContext } from '../navigation/UserContext'; // Importa el contexto
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { setUser } = useContext(UserContext); // Acceder al usuario desde el contexto
+
   const onFooterLinkPress = () => {
     navigation.navigate("RegistrationScreen");
   };
 
   const onLoginPress = async () => {
-    // Activate loading animation
     setIsLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -30,16 +32,30 @@ export default function Login({ navigation }) {
         email,
         password
       );
-      // Signed in
+
+      // Actualiza el contexto con los datos del usuario logueado
+    // Asegúrate de recoger los datos necesarios para setUser
+
+    // Ahora, debes extraer estos datos.
+    const userDoc = await getDoc(doc(FIREBASE_DB, 'users', userCredential.user.uid));
+    if (userDoc.exists()) {
+      setUser(userDoc.data().dataUser);  // Actualiza el contexto
+    }
 
       navigation.navigate("Home");
-      setEmail("");
-      setPassword("");
     } catch (error) {
-      alert("User and password are incorrect or user does not exist");
-      console.error("Error when logging in", error);
+      switch (error.code) {
+        case 'auth/user-not-found':
+          alert("User not found");
+          break;
+        case 'auth/wrong-password':
+          alert("Incorrect password");
+          break;
+        default:
+          alert("Login failed, try again later");
+      }
+      console.error("Error when logging in:", error);
     } finally {
-      // Desactivar la animación de carga, ya sea que haya tenido éxito o no
       setIsLoading(false);
     }
   };
