@@ -4,14 +4,15 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts, Roboto_400Regular, Roboto_700Bold, Roboto_500Medium } from '@expo-google-fonts/roboto';
 import { Image } from 'expo-image';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
 import { FIREBASE_STORAGE } from "../firebaseConfig";
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
+import { UserContext } from '../navigation/UserContext'; // Importa el contexto
 
-export default function Home(props) {
-  
+export default function Home({navigation}) {
+  const { user} = useContext(UserContext); // Acceder al usuario desde el contexto
   
   SplashScreen.preventAutoHideAsync();
   
@@ -31,10 +32,11 @@ export default function Home(props) {
     return null;
   }
 
-  const navigation = props.navigation;
-  const user = props.route?.params?.user || props.user.dataUser;
+  
+  //setUser(props.user.dataUser)
+  //props.route?.params?.user || props.user.dataUser
   //si viene de Registration utilizara la primera y si viene de AppNavigation(de estar logueado) usara la segunda
- 
+  console.log("desde home: ", user)
 
   const functionSignOut = () => {
     signOut(FIREBASE_AUTH).then(() => {

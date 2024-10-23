@@ -1,10 +1,14 @@
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
 import { FIREBASE_STORAGE } from "../firebaseConfig";
+import { UserContext } from '../navigation/UserContext'; // Importa el contexto
 
-function Results({navigation}) {
+function Results({ navigation}) {
+  const { user} = useContext(UserContext); // Acceder al usuario desde el contexto
+//route?.params?.user || rest.user.dataUser;
+  console.log("desde results: ", user)
   // Función para listar todos los archivos y mostrarlos en la consola
   const fetchFiles = async () => {
     const storageRef = ref(FIREBASE_STORAGE, '/');  // Carpeta desde donde quieres listar los archivos
@@ -43,7 +47,7 @@ function Results({navigation}) {
         <Text style={styles.fecha}>Miercoles 29 de noviembre de{"\n"}2023</Text>
         <Text style={styles.textId}>ID: 18466089</Text>
         <Pressable style={styles.buttonVerResultados}
-        onPress={()=>navigation.navigate("Analisis")}
+        onPress={()=>navigation.navigate("Analisis", {user})}
         >
           <Text style={styles.verResultados}>VER RESULTADOS</Text>
         </Pressable>

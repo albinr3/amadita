@@ -1,11 +1,11 @@
-import React, { useState} from "react";
+import React, { useState, useContext} from "react";
 import { View, Button, StyleSheet, Text } from "react-native";
 import { WebView } from "react-native-webview";
+import { UserContext } from '../navigation/UserContext'; // Importa el contexto
 
 const PdfViewer = () => {
-  const [pdfUrl, setPdfUrl] = useState(
-    "https://firebasestorage.googleapis.com/v0/b/amadita-114a6.appspot.com/o/0259121153030394-2024-10-20T23-07-06.867Z.pdf?alt=media&token=83288130-479b-4018-9877-5cdd776154ca"
-  );
+  const { analisis } = useContext(UserContext); // Acceder a los analisis desde el contexto
+  console.log("desde pdfviewer ", analisis)
   const [error, setError] = useState(null);
 
   const handleMessage = (event) => {
@@ -20,7 +20,7 @@ const PdfViewer = () => {
     }
   };
   const googleDocsViewer = `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(
-    pdfUrl
+    analisis.pdfURL
   )}`;
   return (
     <View style={styles.container}>

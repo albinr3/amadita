@@ -1,6 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from './UserContext'; // Importa el contexto
+
 
 import Home from "../screens/Home";
 import Results from "../screens/Results";
@@ -9,6 +11,7 @@ import Analisis from "../screens/Analisis";
 import Login from "../screens/Login";
 import Test from "../screens/Test";
 import RegistrationScreen from "../screens/RegistrationScreen";
+
 import { collection, getDocs, query, where } from "firebase/firestore"; 
 import { FIREBASE_DB } from "../firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
@@ -19,7 +22,7 @@ const Stack = createNativeStackNavigator();
 const AppNavigation = () => {
   // State variables to manage loading and user information
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useContext(UserContext); // Acceder al usuario desde el contexto
 
   // Effect hook to handle user authentication state changes
   useEffect(() => {
@@ -28,7 +31,7 @@ const AppNavigation = () => {
       if (userData) {
         
         const usersCollection = collection(FIREBASE_DB, "users");
-        const q = query(usersCollection, where("dataUser.email", "==", userData.email)); // Cambia userData.user.email a userData.email
+        const q = query(usersCollection, where("dataUser.email", "==", userData.email)); 
 
         try {
           // Ejecuta la consulta
@@ -42,8 +45,8 @@ const AppNavigation = () => {
   
           // Si se encontró, puedes acceder a los datos
           querySnapshot.forEach((doc) => {
-              console.log(`from navigation ID: ${doc.id}, Data: `, doc.data());
-              setUser(doc.data()); // Almacena el usuario si es necesario
+              console.log(`from navigation: `, doc.data().dataUser);
+              setUser(doc.data().dataUser); // Almacena el usuario si es necesario
           });
 
           
@@ -79,9 +82,7 @@ const AppNavigation = () => {
           component={RegistrationScreen}
         />
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home">
-          {(props) => <Home {...props} user={user} />}
-        </Stack.Screen>
+        <Stack.Screen name="Home" component={Home}/>
         <Stack.Screen name="Test" component={Test} />
         <Stack.Screen name="Results" component={Results} />
         <Stack.Screen name="PdfViewer" component={PdfViewer} />

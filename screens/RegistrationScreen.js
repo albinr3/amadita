@@ -51,6 +51,7 @@ export default function RegistrationScreen({ navigation }) {
         const addUser = await setDoc(doc(usersRef, uid), {
           dataUser
         }); 
+        console.log("desde Registration: ", dataUser)
         // Navigate to Home screen with user data
         navigation.navigate('Home', {user: dataUser})      
       })
