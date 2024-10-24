@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable, FlatList } from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useEffect, useContext, useState } from "react";
 import { UserContext } from "../navigation/UserContext"; // Importa el contexto
@@ -7,18 +7,16 @@ import { FIREBASE_DB } from "../firebaseConfig";
 
 function Results({ navigation }) {
   //route?.params?.user || rest.user.dataUser;
-  console.log("desde results: ", user);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext); // Acceder al usuario desde el contexto
   const { analisis, setAnalisis } = useContext(UserContext); // Acceder al análisis desde el contexto
 
-  console.log("desde analisis1: ", user);
 
   // Función para obtener los análisis del usuario
   const fetchUserAnalisis = async (userId) => {
-    const usersCollection = collection(FIREBASE_DB, "analisis");
+    const analisisCollection = collection(FIREBASE_DB, "analisis");
     const q = query(
-      usersCollection,
+      analisisCollection,
       where("analisisData.userId", "==", userId)
     );
 
@@ -35,7 +33,7 @@ function Results({ navigation }) {
       // Si se encontraron, maneja los datos
       querySnapshot.forEach((doc) => {
         console.log(`from analisis: `, doc.data().analisisData);
-        setAnalisis(doc.data().analisisData);
+        setAnalisis((prevAnalisis) => [...prevAnalisis, doc.data().analisisData]);
       });
     } catch (error) {
       console.error("Error al obtener los análisis: ", error);
@@ -81,14 +79,9 @@ function Results({ navigation }) {
   
     return formattedDate;
   };
-  
-  // Ejemplo de uso
-  console.log("prueba: ", formatearFecha(analisis.fecha));
-  
-  
-  return (
-    <View style={styles.screen}>
-      <View style={styles.container}>
+
+  const renderItem = ({item: analisisInn}) => (
+    <View style={styles.container}>
         <View style={styles.viewLogo}>
           <View style={styles.viewCirclelogo}>
             <Icon name="clipboard-pulse" style={styles.icon}></Icon>
@@ -96,17 +89,29 @@ function Results({ navigation }) {
         </View>
         <View style={styles.viewTexts}>
           <Text style={styles.fecha}>
-          {formatearFecha(analisis.fecha)}
+          {formatearFecha(analisisInn.fecha)}
           </Text>
           <Text style={styles.textId}>ID: 18466089</Text>
           <Pressable
             style={styles.buttonVerResultados}
-            onPress={() => navigation.navigate("Analisis", { user })}
+            onPress={() => navigation.navigate("Analisis")}
           >
             <Text style={styles.verResultados}>VER RESULTADOS</Text>
           </Pressable>
         </View>
       </View>
+  )
+  
+  
+  return (
+    <View style={styles.screen}>
+      <FlatList
+        data={analisis} 
+        renderItem={renderItem}
+        keyExtractor={item => item.analisisId}
+      />
+
+      
     </View>
   );
 }

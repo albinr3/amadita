@@ -6,7 +6,7 @@ export const UserContext = createContext();
 // Proveedor del contexto que envuelve la app
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null); // Estado del usuario
-  const [analisis, setAnalisis] = useState(null); //analisis del paciente
+  const [analisis, setAnalisis] = useState([]); //analisis del paciente
   return (
     <UserContext.Provider value={{ user, setUser, analisis, setAnalisis }}>
       {children}
