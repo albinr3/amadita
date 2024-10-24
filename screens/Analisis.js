@@ -2,63 +2,56 @@ import { StyleSheet, View, Text, Pressable } from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { collection, getDocs, query, where } from "firebase/firestore"; 
 import { FIREBASE_DB } from "../firebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
-import { FIREBASE_AUTH } from "../firebaseConfig";
 import { useState, useContext, useEffect } from "react";
 import { UserContext } from '../navigation/UserContext'; // Importa el contexto
 
 
-function Analisis({ navigation, route }) {
+function Analisis({ navigation }) {
   const [loading, setLoading] = useState(true);
-  const { user, setUser } = useContext(UserContext); // Acceder al usuario desde el contexto
-  const { analisis, setAnalisis } = useContext(UserContext); // Acceder al usuario desde el contexto
+  const { user } = useContext(UserContext); // Acceder al usuario desde el contexto
+  const { analisis, setAnalisis } = useContext(UserContext); // Acceder al análisis desde el contexto
 
-  console.log("desde analisis1: ", user)
-   // Effect hook to handle user authentication state changes
-   useEffect(() => {
-    // Subscribe to authentication state changes using Firebase Auth
-    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (userData) => {
-      if (userData) {
-       
-        const usersCollection = collection(FIREBASE_DB, "analisis");
-        const q = query(usersCollection, where("analisisData.userId", "==", userData.uid)); 
+  console.log("desde analisis1: ", user);
 
-        try {
-          // Ejecuta la consulta
-          const querySnapshot = await getDocs(q);
-          
-          // Revisa si se encontraron documentos
-          if (querySnapshot.empty) {
-              console.log("No se encontró ningún analisis con ese usuario.");
-              return null;
-          }
-  
-          // Si se encontró, puedes acceder a los datos
-          querySnapshot.forEach((doc) => {
-              console.log(`from analisis: `, doc.data().analisisData);
-              setAnalisis(doc.data().analisisData); // Almacena el usuario si es necesario
-          });
+  // Función para obtener los análisis del usuario
+  const fetchUserAnalisis = async (userId) => {
+    const usersCollection = collection(FIREBASE_DB, "analisis");
+    const q = query(usersCollection, where("analisisData.userId", "==", userId));
 
-          
-        } catch (error) {
-          console.error("Error al obtener el usuario: ", error);
-        }
-      } else {
-        // If no user data, log that no one is logged in
-        console.log("No one is logged in");
+    try {
+      // Ejecuta la consulta
+      const querySnapshot = await getDocs(q);
+
+      // Revisa si se encontraron documentos
+      if (querySnapshot.empty) {
+        console.log("No se encontró ningún análisis con ese usuario.");
+        return;
       }
 
-      // Set loading to false once authentication state is determined
-      setLoading(false);
-    });
+      // Si se encontraron, maneja los datos
+      querySnapshot.forEach((doc) => {
+        console.log(`from analisis: `, doc.data().analisisData);
+        setAnalisis(doc.data().analisisData);
+      });
 
-    // Cleanup the subscription when the component unmounts
-    return () => unsubscribe();
-  }, []); // Empty dependency array ensures that useEffect runs once on mount
+    } catch (error) {
+      console.error("Error al obtener los análisis: ", error);
+    } finally {
+      setLoading(false); // Asegúrate de que el estado de loading se actualice al final
+    }
+  };
 
-  // If still loading, return an empty fragment
+  // useEffect para obtener los análisis cuando el componente se monta
+  useEffect(() => {
+    if (user) {
+      // Si el usuario está presente en el contexto, busca sus análisis
+      fetchUserAnalisis(user.id);
+    }
+  }, [user]); // Se ejecuta cuando 'user' cambie
+
+  // Si aún está cargando, muestra un fragmento vacío o un spinner de carga
   if (loading) {
-    return <></>;
+    return <></>; // O puedes usar un indicador de carga como ActivityIndicator
   }
 
   return (
@@ -67,11 +60,10 @@ function Analisis({ navigation, route }) {
         <Text>Pruebas</Text>
       </View>
       <Pressable 
-      onPress={() => navigation.navigate("PdfViewer")}
-      style={styles.containerPrueba}>
-        <View
-          style={styles.botonPrueba}
-        >
+        onPress={() => navigation.navigate("PdfViewer")}
+        style={styles.containerPrueba}
+      >
+        <View style={styles.botonPrueba}>
           <Text style={styles.textoPrueba}>
             {analisis.text.analisis1}
           </Text>
@@ -86,27 +78,24 @@ function Analisis({ navigation, route }) {
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1, // Para ocupar toda la pantalla
-    backgroundColor: "white", // Fondo blanco para toda la pantalla
+    flex: 1,
+    backgroundColor: "white",
   },
   containerPrueba: {
     borderWidth: 1,
     borderColor: "rgba(229,228,228,1)",
-    borderBottomWidth: 1,
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
     height: 80,
     backgroundColor: "white",
     padding: 6,
-    
   },
   viewLogo: {
     width: 81,
     alignItems: "center",
+    justifyContent: "center",
     height: "100%",
-    justifyContent:"center"
-   
   },
   icon: {
     color: "rgba(255,2,143,1)",
@@ -128,4 +117,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Analisis;
+export default Analisis

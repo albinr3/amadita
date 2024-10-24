@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Image, Pressable, Text, TextInput, View, ActivityIndicator} from 'react-native'
 //import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styles from './styles';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH, FIREBASE_DB } from '../firebaseConfig';
 import { collection, setDoc, getDocs, doc} from "firebase/firestore"; 
-
+import { UserContext } from "../navigation/UserContext"; // Importa el contexto
 
 
 export default function RegistrationScreen({ navigation }) {
@@ -14,6 +14,7 @@ export default function RegistrationScreen({ navigation }) {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false);
+  const { setUser} = useContext(UserContext); // Acceder al usuario desde el contexto
 
   /**
    * Navigates to the Login screen.
@@ -53,7 +54,8 @@ export default function RegistrationScreen({ navigation }) {
         }); 
         console.log("desde Registration: ", dataUser)
         // Navigate to Home screen with user data
-        navigation.navigate('Home', {user: dataUser})      
+        setUser(dataUser)
+        navigation.replace('Home')      
       })
       .catch((error) => {
         console.error("Error al crear usuario", error);

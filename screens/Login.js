@@ -42,7 +42,7 @@ export default function Login({ navigation }) {
       setUser(userDoc.data().dataUser);  // Actualiza el contexto
     }
 
-      navigation.navigate("Home");
+      navigation.replace("Home");
     } catch (error) {
       switch (error.code) {
         case 'auth/user-not-found':

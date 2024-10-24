@@ -1,58 +1,112 @@
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { useEffect, useContext } from "react";
-import { ref, listAll, getDownloadURL } from 'firebase/storage';
-import { FIREBASE_STORAGE } from "../firebaseConfig";
-import { UserContext } from '../navigation/UserContext'; // Importa el contexto
+import { useEffect, useContext, useState } from "react";
+import { UserContext } from "../navigation/UserContext"; // Importa el contexto
+import { collection, getDocs, query, where } from "firebase/firestore"; 
+import { FIREBASE_DB } from "../firebaseConfig";
 
-function Results({ navigation}) {
-  const { user} = useContext(UserContext); // Acceder al usuario desde el contexto
-//route?.params?.user || rest.user.dataUser;
-  console.log("desde results: ", user)
-  // Función para listar todos los archivos y mostrarlos en la consola
-  const fetchFiles = async () => {
-    const storageRef = ref(FIREBASE_STORAGE, '/');  // Carpeta desde donde quieres listar los archivos
+function Results({ navigation }) {
+  //route?.params?.user || rest.user.dataUser;
+  console.log("desde results: ", user);
+  const [loading, setLoading] = useState(true);
+  const { user } = useContext(UserContext); // Acceder al usuario desde el contexto
+  const { analisis, setAnalisis } = useContext(UserContext); // Acceder al análisis desde el contexto
+
+  console.log("desde analisis1: ", user);
+
+  // Función para obtener los análisis del usuario
+  const fetchUserAnalisis = async (userId) => {
+    const usersCollection = collection(FIREBASE_DB, "analisis");
+    const q = query(
+      usersCollection,
+      where("analisisData.userId", "==", userId)
+    );
 
     try {
-      const result = await listAll(storageRef);
+      // Ejecuta la consulta
+      const querySnapshot = await getDocs(q);
 
-      // Obtener las URLs de los archivos y mostrarlas en la consola
-      result.items.forEach(async (itemRef) => {
-        const url = await getDownloadURL(itemRef);
-        console.log(`Archivo: ${itemRef.name} - URL: ${url}`);
+      // Revisa si se encontraron documentos
+      if (querySnapshot.empty) {
+        console.log("No se encontró ningún análisis con ese usuario.");
+        return;
+      }
+
+      // Si se encontraron, maneja los datos
+      querySnapshot.forEach((doc) => {
+        console.log(`from analisis: `, doc.data().analisisData);
+        setAnalisis(doc.data().analisisData);
       });
     } catch (error) {
-      console.log('Error al listar los archivos:', error);
+      console.error("Error al obtener los análisis: ", error);
+    } finally {
+      setLoading(false); // Asegúrate de que el estado de loading se actualice al final
     }
   };
 
+  // useEffect para obtener los análisis cuando el componente se monta
+  useEffect(() => {
+    if (user) {
+      // Si el usuario está presente en el contexto, busca sus análisis
+      fetchUserAnalisis(user.id);
+    }
+  }, [user]); // Se ejecuta cuando 'user' cambie
 
-    
+  // Si aún está cargando, muestra un fragmento vacío o un spinner de carga
+  if (loading) {
+    return <></>; // O puedes usar un indicador de carga como ActivityIndicator
+  }
+
+  const formatearFecha = (dateStr) => {
+    // Verifica el formato y convierte la fecha si es necesario
+    const [day, month, year] = dateStr.split('/'); // Asume formato DD/MM/YYYY
+    const formattedDateStr = `${year}-${month}-${day}`; // Formato YYYY-MM-DD
   
-    useEffect(() => {
-      fetchFiles();// Ejecutar la función cuando el componente se monte
-    }, []);
+    // Ahora puedes crear el objeto Date de forma segura
+    const date = new Date(formattedDateStr);
   
-   
+    // Define las opciones de formato
+    const options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+  
+    // Formatea la fecha en español
+    let formattedDate = new Intl.DateTimeFormat("es-ES", options).format(date);
+  
+    // Capitaliza la primera letra de la cadena
+    formattedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+  
+    return formattedDate;
+  };
+  
+  // Ejemplo de uso
+  console.log("prueba: ", formatearFecha(analisis.fecha));
+  
   
   return (
     <View style={styles.screen}>
-    <View style={styles.container}>
-      <View style={styles.viewLogo}>
-        <View style={styles.viewCirclelogo}>
-          <Icon name="clipboard-pulse" style={styles.icon}></Icon>
+      <View style={styles.container}>
+        <View style={styles.viewLogo}>
+          <View style={styles.viewCirclelogo}>
+            <Icon name="clipboard-pulse" style={styles.icon}></Icon>
+          </View>
+        </View>
+        <View style={styles.viewTexts}>
+          <Text style={styles.fecha}>
+          {formatearFecha(analisis.fecha)}
+          </Text>
+          <Text style={styles.textId}>ID: 18466089</Text>
+          <Pressable
+            style={styles.buttonVerResultados}
+            onPress={() => navigation.navigate("Analisis", { user })}
+          >
+            <Text style={styles.verResultados}>VER RESULTADOS</Text>
+          </Pressable>
         </View>
       </View>
-      <View style={styles.viewTexts}>
-        <Text style={styles.fecha}>Miercoles 29 de noviembre de{"\n"}2023</Text>
-        <Text style={styles.textId}>ID: 18466089</Text>
-        <Pressable style={styles.buttonVerResultados}
-        onPress={()=>navigation.navigate("Analisis", {user})}
-        >
-          <Text style={styles.verResultados}>VER RESULTADOS</Text>
-        </Pressable>
-      </View>
-    </View>
     </View>
   );
 }
@@ -61,7 +115,6 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1, // Para ocupar toda la pantalla
     backgroundColor: "white", // Fondo blanco para toda la pantalla
-
   },
   container: {
     borderWidth: 1,
@@ -79,7 +132,7 @@ const styles = StyleSheet.create({
     height: 68,
     marginBottom: 24,
     marginTop: 24,
-    marginRight: 6
+    marginRight: 6,
   },
   viewCirclelogo: {
     width: 68,
@@ -119,7 +172,7 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderRadius: 5,
     justifyContent: "center",
-    paddingHorizontal: 4
+    paddingHorizontal: 4,
   },
   verResultados: {
     fontFamily: "Roboto_700Bold",
