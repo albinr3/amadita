@@ -77,7 +77,8 @@ export default function Home({ navigation }) {
           </View>
         </View>
         <View style={styles.viewBotones}>
-          <Pressable style={styles.buttonSucursales}>
+          <Pressable style={styles.buttonSucursales}
+          onPress={() => navigation.navigate("LocationsMap")}>
             <FontAwesome name="map-marker" style={styles.iconMap}></FontAwesome>
             <Text style={styles.sucursales}>Sucursales</Text>
           </Pressable>
@@ -88,7 +89,9 @@ export default function Home({ navigation }) {
             <FontAwesome name="newspaper-o" style={styles.icon2}></FontAwesome>
             <Text style={styles.resultados}>Resultados</Text>
           </Pressable>
-          <Pressable style={styles.buttonPrueba}>
+          <Pressable style={styles.buttonPrueba}
+          onPress={() => navigation.navigate("Pruebas")}>
+          
             <FontAwesome name="bug" style={styles.iconPrueba}></FontAwesome>
             <Text style={styles.pruebas}>Pruebas</Text>
           </Pressable>
@@ -179,11 +182,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     flexWrap: "wrap",
-    marginTop: 3,
+    marginTop: 14,
   },
   buttonSucursales: {
-    width: 120,
-    height: 120,
+    width: 115,
+    height: 115,
     backgroundColor: "rgba(72,95,253,1)",
     borderRadius: 81,
     marginBottom: 5,
@@ -193,18 +196,18 @@ const styles = StyleSheet.create({
   sucursales: {
     fontFamily: "Roboto_500Medium",
     color: "rgba(251,248,248,1)",
-    fontSize: 20,
+    fontSize: 18,
     alignItems: "center",
     alignSelf: "center",
     marginTop: 0,
   },
   iconMap: {
     color: "rgba(255,255,255,1)",
-    fontSize: 40,
+    fontSize: 38,
   },
   buttonResultados: {
-    width: 120,
-    height: 120,
+    width: 115,
+    height: 115,
     backgroundColor: "rgba(253,72,122,1)",
     borderRadius: 81,
     marginBottom: 5,
@@ -214,18 +217,18 @@ const styles = StyleSheet.create({
   resultados: {
     fontFamily: "Roboto_500Medium",
     color: "rgba(251,248,248,1)",
-    fontSize: 20,
+    fontSize: 18,
     alignItems: "center",
     alignSelf: "center",
     marginTop: 0,
   },
   icon2: {
     color: "rgba(255,255,255,1)",
-    fontSize: 40,
+    fontSize: 38,
   },
   buttonPrueba: {
-    width: 120,
-    height: 120,
+    width: 115,
+    height: 115,
     backgroundColor: "rgba(189,16,224,1)",
     borderRadius: 81,
     marginBottom: 5,
@@ -235,18 +238,18 @@ const styles = StyleSheet.create({
   pruebas: {
     fontFamily: "Roboto_500Medium",
     color: "rgba(251,248,248,1)",
-    fontSize: 20,
+    fontSize: 18,
     alignItems: "center",
     alignSelf: "center",
     marginTop: 0,
   },
   iconPrueba: {
     color: "rgba(255,255,255,1)",
-    fontSize: 40,
+    fontSize: 38,
   },
   buttonFacturar: {
-    width: 120,
-    height: 120,
+    width: 115,
+    height: 115,
     backgroundColor: "rgba(72,194,253,1)",
     borderRadius: 81,
     marginBottom: 5,
@@ -256,18 +259,18 @@ const styles = StyleSheet.create({
   facturar: {
     fontFamily: "Roboto_500Medium",
     color: "rgba(251,248,248,1)",
-    fontSize: 20,
+    fontSize: 18,
     alignItems: "center",
     alignSelf: "center",
     marginTop: 0,
   },
   icon3: {
     color: "rgba(255,255,255,1)",
-    fontSize: 40,
+    fontSize: 38,
   },
   buttonPerfil: {
-    width: 120,
-    height: 120,
+    width: 115,
+    height: 115,
     backgroundColor: "rgba(253,159,72,1)",
     borderRadius: 81,
     marginBottom: 5,
@@ -277,13 +280,13 @@ const styles = StyleSheet.create({
   perfil: {
     fontFamily: "Roboto_500Medium",
     color: "rgba(251,248,248,1)",
-    fontSize: 20,
+    fontSize: 18,
     alignItems: "center",
     alignSelf: "center",
     marginTop: 0,
   },
   icon4: {
     color: "rgba(255,255,255,1)",
-    fontSize: 40,
+    fontSize: 38,
   },
 });

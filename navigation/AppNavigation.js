@@ -11,6 +11,8 @@ import Analisis from "../screens/Analisis";
 import Login from "../screens/Login";
 import Test from "../screens/Test";
 import RegistrationScreen from "../screens/RegistrationScreen";
+import LocationsMap from "../screens/LocationsMap";
+import Pruebas from "../screens/Pruebas";
 
 import { collection, getDocs, query, where } from "firebase/firestore"; 
 import { FIREBASE_DB } from "../firebaseConfig";
@@ -83,6 +85,8 @@ const AppNavigation = () => {
         />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Home" component={Home}/>
+        <Stack.Screen name="Pruebas" component={Pruebas}/>
+        <Stack.Screen name="LocationsMap" component={LocationsMap}/>
         <Stack.Screen name="Analisis" component={Analisis} />
         <Stack.Screen name="Results" component={Results} />
         <Stack.Screen name="PdfViewer" component={PdfViewer} />
