@@ -83,10 +83,11 @@ const AppNavigation = () => {
         />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Home" component={Home}/>
-        <Stack.Screen name="Test" component={Test} />
+        <Stack.Screen name="Analisis" component={Analisis} />
         <Stack.Screen name="Results" component={Results} />
         <Stack.Screen name="PdfViewer" component={PdfViewer} />
-        <Stack.Screen name="Analisis" component={Analisis} />
+        
+        <Stack.Screen name="Test" component={Test} />
       </Stack.Navigator>
     </NavigationContainer>
   );

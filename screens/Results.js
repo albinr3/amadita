@@ -1,8 +1,8 @@
 import { StyleSheet, View, Text, Pressable, FlatList } from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext, useState, useCallback } from "react";
 import { UserContext } from "../navigation/UserContext"; // Importa el contexto
-import { collection, getDocs, query, where } from "firebase/firestore"; 
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { FIREBASE_DB } from "../firebaseConfig";
 
 function Results({ navigation }) {
@@ -10,7 +10,6 @@ function Results({ navigation }) {
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext); // Acceder al usuario desde el contexto
   const { analisis, setAnalisis } = useContext(UserContext); // Acceder al análisis desde el contexto
-
 
   // Función para obtener los análisis del usuario
   const fetchUserAnalisis = async (userId) => {
@@ -30,11 +29,13 @@ function Results({ navigation }) {
         return;
       }
 
-      // Si se encontraron, maneja los datos
+      const nuevosAnalisis = [];
       querySnapshot.forEach((doc) => {
-        console.log(`from analisis: `, doc.data().analisisData);
-        setAnalisis((prevAnalisis) => [...prevAnalisis, doc.data().analisisData]);
+        console.log(`Análisis obtenido: `, doc.data().analisisData);
+        nuevosAnalisis.push(doc.data().analisisData);
       });
+
+      setAnalisis(nuevosAnalisis); // Reemplaza el estado de analisis en lugar de concatenarlo
     } catch (error) {
       console.error("Error al obtener los análisis: ", error);
     } finally {
@@ -42,27 +43,30 @@ function Results({ navigation }) {
     }
   };
 
-  // useEffect para obtener los análisis cuando el componente se monta
-  useEffect(() => {
-    if (user) {
-      // Si el usuario está presente en el contexto, busca sus análisis
-      fetchUserAnalisis(user.id);
-    }
-  }, [user]); // Se ejecuta cuando 'user' cambie
+
+// useEffect para obtener los análisis cuando el componente se monta
+useEffect(() => {
+  if (user) {
+    // Si el usuario está presente en el contexto, busca sus análisis
+    fetchUserAnalisis(user.id);
+  }
+}, [user]); // Se ejecuta cuando 'user' cambie
+  
 
   // Si aún está cargando, muestra un fragmento vacío o un spinner de carga
   if (loading) {
+    console.log("ventana Results: no hay nada");
     return <></>; // O puedes usar un indicador de carga como ActivityIndicator
   }
 
   const formatearFecha = (dateStr) => {
     // Verifica el formato y convierte la fecha si es necesario
-    const [day, month, year] = dateStr.split('/'); // Asume formato DD/MM/YYYY
+    const [day, month, year] = dateStr.split("/"); // Asume formato DD/MM/YYYY
     const formattedDateStr = `${year}-${month}-${day}`; // Formato YYYY-MM-DD
-  
+
     // Ahora puedes crear el objeto Date de forma segura
     const date = new Date(formattedDateStr);
-  
+
     // Define las opciones de formato
     const options = {
       weekday: "long",
@@ -70,48 +74,50 @@ function Results({ navigation }) {
       month: "long",
       day: "numeric",
     };
-  
+
     // Formatea la fecha en español
     let formattedDate = new Intl.DateTimeFormat("es-ES", options).format(date);
-  
+
     // Capitaliza la primera letra de la cadena
-    formattedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-  
+    formattedDate =
+      formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+
     return formattedDate;
   };
 
-  const renderItem = ({item: analisisInn}) => (
-    <View style={styles.container}>
+  const renderItem = ({ item: analisisInn }) => {
+    return (
+      <View style={styles.container}>
         <View style={styles.viewLogo}>
           <View style={styles.viewCirclelogo}>
             <Icon name="clipboard-pulse" style={styles.icon}></Icon>
           </View>
         </View>
         <View style={styles.viewTexts}>
-          <Text style={styles.fecha}>
-          {formatearFecha(analisisInn.fecha)}
-          </Text>
+          <Text style={styles.fecha}>{formatearFecha(analisisInn.fecha)}</Text>
           <Text style={styles.textId}>ID: 18466089</Text>
           <Pressable
             style={styles.buttonVerResultados}
-            onPress={() => navigation.navigate("Analisis")}
+            onPress={() => navigation.navigate("Analisis", {analisisId : analisisInn.analisisId})}
           >
             <Text style={styles.verResultados}>VER RESULTADOS</Text>
           </Pressable>
         </View>
       </View>
-  )
-  
-  
+    );
+  };
+
   return (
     <View style={styles.screen}>
-      <FlatList
-        data={analisis} 
-        renderItem={renderItem}
-        keyExtractor={item => item.analisisId}
-      />
-
-      
+      {analisis && analisis.length > 0 ? (
+        <FlatList
+          data={analisis}
+          renderItem={renderItem}
+          keyExtractor={item => item.analisisId}
+        />
+      ) : (
+        <Text>No hay análisis disponibles</Text>
+      )}
     </View>
   );
 }

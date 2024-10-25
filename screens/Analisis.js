@@ -1,79 +1,61 @@
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable, FlatList } from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { collection, getDocs, query, where } from "firebase/firestore"; 
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { FIREBASE_DB } from "../firebaseConfig";
 import { useState, useContext, useEffect } from "react";
-import { UserContext } from '../navigation/UserContext'; // Importa el contexto
+import { UserContext } from "../navigation/UserContext"; // Importa el contexto
 
-
-function Analisis({ navigation }) {
+function Analisis({ navigation, route, ...props }) {
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext); // Acceder al usuario desde el contexto
-  const { analisis, setAnalisis } = useContext(UserContext); // Acceder al análisis desde el contexto
+  const { analisis } = useContext(UserContext); // Acceder al análisis desde el contexto
+  const analisisId = route.params.analisisId
 
-  console.log("desde analisis1: ", user);
-
-  // Función para obtener los análisis del usuario
-  const fetchUserAnalisis = async (userId) => {
-    const usersCollection = collection(FIREBASE_DB, "analisis");
-    const q = query(usersCollection, where("analisisData.userId", "==", userId));
-
-    try {
-      // Ejecuta la consulta
-      const querySnapshot = await getDocs(q);
-
-      // Revisa si se encontraron documentos
-      if (querySnapshot.empty) {
-        console.log("No se encontró ningún análisis con ese usuario.");
-        return;
-      }
-
-      // Si se encontraron, maneja los datos
-      querySnapshot.forEach((doc) => {
-        console.log(`from analisis: `, doc.data().analisisData);
-        setAnalisis(doc.data().analisisData);
-      });
-
-    } catch (error) {
-      console.error("Error al obtener los análisis: ", error);
-    } finally {
-      setLoading(false); // Asegúrate de que el estado de loading se actualice al final
-    }
-  };
-
-  // useEffect para obtener los análisis cuando el componente se monta
-  useEffect(() => {
-    if (user) {
-      // Si el usuario está presente en el contexto, busca sus análisis
-      fetchUserAnalisis(user.id);
-    }
-  }, [user]); // Se ejecuta cuando 'user' cambie
-
-  // Si aún está cargando, muestra un fragmento vacío o un spinner de carga
-  if (loading) {
-    return <></>; // O puedes usar un indicador de carga como ActivityIndicator
+  const details = analisis.filter(doc => doc.analisisId === analisisId)[0];
+  console.log("details en ventana analisis ", details)
+  // Comprobar que details y details.text están definidos
+  if (!details || !details.text) {
+    return (
+      <View style={styles.screen}>
+        <Text>No se encontraron análisis.</Text>
+      </View>
+    );
   }
+// Convertir el objeto `text` a un array de valores
+const analisisArray = Object.values(details.text);
+
+  console.log("analisisId en ventana analisis ", analisisArray)
+  const renderItem = ({ item: analisisInn }) => {
+    return (
+      <>
+        
+        <Pressable
+          onPress={() => navigation.navigate("PdfViewer", {analisisId : analisisId})}
+          style={styles.containerPrueba}
+        >
+          <View style={styles.botonPrueba}>
+            <Text style={styles.textoPrueba}>{analisisInn}</Text>
+          </View>
+          <View style={styles.viewLogo}>
+            <Icon name="arrow-right-circle-outline" style={styles.icon}></Icon>
+          </View>
+        </Pressable>
+        </>
+    );
+  };
 
   return (
     <View style={styles.screen}>
       <View style={styles.containerText}>
-        <Text>Pruebas</Text>
-      </View>
-      <Pressable 
-        onPress={() => navigation.navigate("PdfViewer")}
-        style={styles.containerPrueba}
-      >
-        <View style={styles.botonPrueba}>
-          <Text style={styles.textoPrueba}>
-            {analisis.text.analisis1}
-          </Text>
+          <Text>Pruebas</Text>
         </View>
-        <View style={styles.viewLogo}>
-          <Icon name="arrow-right-circle-outline" style={styles.icon}></Icon>
-        </View>
-      </Pressable>
+      <FlatList 
+        data={analisisArray}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+      />
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -117,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Analisis
+export default Analisis;

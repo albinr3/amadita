@@ -3,9 +3,16 @@ import { View, Button, StyleSheet, Text } from "react-native";
 import { WebView } from "react-native-webview";
 import { UserContext } from '../navigation/UserContext'; // Importa el contexto
 
-const PdfViewer = () => {
+const PdfViewer = ({route}) => {
   const { analisis } = useContext(UserContext); // Acceder a los analisis desde el contexto
+  const analisisId = route.params.analisisId
+
+  const details = analisis.filter(doc => doc.analisisId === analisisId)[0];
+
+  // Convertir el objeto `text` a un array de valores
+
   console.log("desde pdfviewer ", analisis)
+  console.log("desde pdfviewer2 ", details)
   const [error, setError] = useState(null);
 
   const handleMessage = (event) => {
@@ -20,7 +27,7 @@ const PdfViewer = () => {
     }
   };
   const googleDocsViewer = `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(
-    analisis.pdfURL
+    details.pdfURL
   )}`;
   return (
     <View style={styles.container}>
