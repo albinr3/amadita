@@ -15,16 +15,12 @@ useEffect(() => {
 
   if (details) {
     // Buscar el análisis que tenga el mismo idInterno
-    const foundPdfURL = Object.values(details.text).find(item => item.id === idInterno)?.pdfURL;
+    const foundPdfURL = Object.values(details.text).find(item => item.id === idInterno)?.pdfURL;//Con ?.pdfURL accedemos al pdfURL del análisis que coincida, o undefined si no se encuentra.
     setPdfURL(foundPdfURL);
   }
 }, [analisisId, idInterno, analisis]);
 
- 
-  // Convertir el objeto `text` a un array de valores
 
-  //console.log("desde pdfviewer ", analisis)
-  //console.log("desde pdfviewer2 ", details)
   const [error, setError] = useState(null);
 
   const handleMessage = (event) => {
