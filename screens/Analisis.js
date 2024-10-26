@@ -12,7 +12,7 @@ function Analisis({ navigation, route, ...props }) {
   const analisisId = route.params.analisisId
 
   const details = analisis.filter(doc => doc.analisisId === analisisId)[0];
-  console.log("details en ventana analisis ", details)
+  //console.log("details en ventana analisis ", details)
   // Comprobar que details y details.text están definidos
   if (!details || !details.text) {
     return (
@@ -30,11 +30,11 @@ const analisisArray = Object.values(details.text);
       <>
         
         <Pressable
-          onPress={() => navigation.navigate("PdfViewer", {analisisId : analisisId})}
+          onPress={() => navigation.navigate("PdfViewer", {analisisId : analisisId, idInterno: analisisInn.id})}
           style={styles.containerPrueba}
         >
           <View style={styles.botonPrueba}>
-            <Text style={styles.textoPrueba}>{analisisInn}</Text>
+            <Text style={styles.textoPrueba}>{analisisInn.text}</Text>
           </View>
           <View style={styles.viewLogo}>
             <Icon name="arrow-right-circle-outline" style={styles.icon}></Icon>
@@ -52,7 +52,7 @@ const analisisArray = Object.values(details.text);
       <FlatList 
         data={analisisArray}
         renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item.id}
       />
     </View>
   )

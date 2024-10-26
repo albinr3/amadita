@@ -60,30 +60,28 @@ useEffect(() => {
   }
 
   const formatearFecha = (dateStr) => {
-    // Verifica el formato y convierte la fecha si es necesario
-    const [day, month, year] = dateStr.split("/"); // Asume formato DD/MM/YYYY
-    const formattedDateStr = `${year}-${month}-${day}`; // Formato YYYY-MM-DD
-
-    // Ahora puedes crear el objeto Date de forma segura
-    const date = new Date(formattedDateStr);
-
-    // Define las opciones de formato
+    // Divide la fecha en día, mes y año
+    const [day, month, year] = dateStr.split("/");
+  
+    // Crea la fecha especificando directamente los componentes
+    const date = new Date(year, month - 1, day); // Meses son 0-indexados en JavaScript
+  
     const options = {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
     };
-
+  
     // Formatea la fecha en español
     let formattedDate = new Intl.DateTimeFormat("es-ES", options).format(date);
-
-    // Capitaliza la primera letra de la cadena
-    formattedDate =
-      formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-
+  
+    // Capitaliza la primera letra
+    formattedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+  
     return formattedDate;
   };
+  
 
   const renderItem = ({ item: analisisInn }) => {
     return (

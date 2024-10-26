@@ -1,18 +1,30 @@
-import React, { useState, useContext} from "react";
+import React, { useState, useContext, useEffect} from "react";
 import { View, Button, StyleSheet, Text } from "react-native";
 import { WebView } from "react-native-webview";
 import { UserContext } from '../navigation/UserContext'; // Importa el contexto
 
 const PdfViewer = ({route}) => {
-  const { analisis } = useContext(UserContext); // Acceder a los analisis desde el contexto
-  const analisisId = route.params.analisisId
+  const { analisis } = useContext(UserContext); // Acceder a los análisis desde el contexto
+const analisisId = route.params.analisisId;
+const idInterno = route.params.idInterno;
+const [pdfURL, setPdfURL] = useState("")
 
-  const details = analisis.filter(doc => doc.analisisId === analisisId)[0];
+useEffect(() => {
+  // Buscar el objeto de análisis que coincida con el analisisId
+  const details = analisis.find(doc => doc.analisisId === analisisId);
 
+  if (details) {
+    // Buscar el análisis que tenga el mismo idInterno
+    const foundPdfURL = Object.values(details.text).find(item => item.id === idInterno)?.pdfURL;
+    setPdfURL(foundPdfURL);
+  }
+}, [analisisId, idInterno, analisis]);
+
+ 
   // Convertir el objeto `text` a un array de valores
 
-  console.log("desde pdfviewer ", analisis)
-  console.log("desde pdfviewer2 ", details)
+  //console.log("desde pdfviewer ", analisis)
+  //console.log("desde pdfviewer2 ", details)
   const [error, setError] = useState(null);
 
   const handleMessage = (event) => {
@@ -26,9 +38,10 @@ const PdfViewer = ({route}) => {
       console.error("Error al parsear el mensaje:", error);
     }
   };
+ 
   const googleDocsViewer = `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(
-    details.pdfURL
-  )}`;
+    pdfURL
+    )}`;
   return (
     <View style={styles.container}>
       <WebView
