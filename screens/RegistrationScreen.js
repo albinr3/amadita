@@ -9,7 +9,8 @@ import { UserContext } from "../navigation/UserContext"; // Importa el contexto
 
 
 export default function RegistrationScreen({ navigation }) {
-  const [fullName, setFullName] = useState('')
+  const [Nombre, setNombre] = useState('')
+  const [Apellido, setApellido] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -44,7 +45,8 @@ export default function RegistrationScreen({ navigation }) {
         const dataUser = {
           id: uid,
           email,
-          fullName
+          Nombre,
+          Apellido
         };
 
         // Add user data to Firestore database
@@ -55,7 +57,7 @@ export default function RegistrationScreen({ navigation }) {
         console.log("desde Registration: ", dataUser)
         // Navigate to Home screen with user data
         setUser(dataUser)
-        navigation.replace('Home')      
+        //navigation.replace('Home')      
       })
       .catch((error) => {
         console.error("Error al crear usuario", error);
@@ -69,33 +71,30 @@ export default function RegistrationScreen({ navigation }) {
   }
 
   
-  // Uncomment the following code to enable database query
- const onConsultPress = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(FIREBASE_DB, "users"));
-  
-      querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${JSON.stringify(doc.data(), null, 2)}`);
-      });
-    } catch (error) {
-      console.error("Error al consultar la base de datos:", error);
-    }
-  }
-  
   return (
     <View style={styles.container}>
       
         <Image
           style={styles.logo}
           source={require('../assets/icon.png')}
+          resizeMode='contain'
         />
         {/* Input fields for user registration */}
         <TextInput
           style={styles.input}
-          placeholder="Fullname"
+          placeholder="Nombre"
           placeholderTextColor="#aaa"
-          onChangeText={(text) => setFullName(text)}
-          value={fullName}
+          onChangeText={(text) => setNombre(text)}
+          value={Nombre}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Apellido"
+          placeholderTextColor="#aaa"
+          onChangeText={(text) => setApellido(text)}
+          value={Apellido}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
@@ -112,7 +111,7 @@ export default function RegistrationScreen({ navigation }) {
           style={styles.input}
           placeholderTextColor="#aaa"
           secureTextEntry
-          placeholder="Password"
+          placeholder="Contraseña"
           onChangeText={(text) => setPassword(text)}
           value={password}
           underlineColorAndroid="transparent"
@@ -122,7 +121,7 @@ export default function RegistrationScreen({ navigation }) {
           style={styles.input}
           placeholderTextColor="#aaa"
           secureTextEntry
-          placeholder="Confirm Password"
+          placeholder="Confirmar Contraseña"
           onChangeText={(text) => setConfirmPassword(text)}
           value={confirmPassword}
           underlineColorAndroid="transparent"
@@ -135,17 +134,13 @@ export default function RegistrationScreen({ navigation }) {
           <Pressable
             style={styles.button}
             onPress={() => onRegisterPress()}>
-            <Text style={styles.buttonTitle}>Create account</Text>
+            <Text style={styles.buttonTitle}>Crear cuenta</Text>
           </Pressable>
       )}
-        <Pressable
-          style={styles.button}
-          onPress={() => onConsultPress()}>
-          <Text style={styles.buttonTitle}>navegar</Text>
-        </Pressable>
+        
         {/* Footer text with link to Login screen */}
         <View style={styles.footerView}>
-          <Text style={styles.footerText}>Already got an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Log in</Text></Text>
+          <Text style={styles.footerText}>¿Ya tienes una cuenta? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Inicia Sesion</Text></Text>
         </View>
      
     </View>

@@ -10,14 +10,12 @@ import {
 import { Image } from "expo-image";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useContext } from "react";
-import { ref, listAll, getDownloadURL } from "firebase/storage";
-import { FIREBASE_STORAGE } from "../firebaseConfig";
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import { UserContext } from "../navigation/UserContext"; // Importa el contexto
 
 export default function Home({ navigation }) {
-  const { user } = useContext(UserContext); // Acceder al usuario desde el contexto
+  const { user, setUser } = useContext(UserContext); // Acceder al usuario desde el contexto
   SplashScreen.preventAutoHideAsync();
 
   const [loaded, error] = useFonts({
@@ -46,7 +44,8 @@ export default function Home({ navigation }) {
       .then(() => {
         // Sign-out successful.
         console.log("Sign out successful");
-        navigation.navigate("Login");
+        //navigation.navigate("Login");
+        setUser(null)
       })
       .catch((error) => {
         // An error happened.
@@ -57,7 +56,7 @@ export default function Home({ navigation }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.configIconRow}>
-          <Pressable onPress={() => functionSignOut()}>
+          <Pressable onPress={() => navigation.toggleDrawer()}>
             <Feather name="settings" style={styles.configIcon}></Feather>
           </Pressable>
           <Image
@@ -72,7 +71,7 @@ export default function Home({ navigation }) {
       <View style={styles.rect2}>
         <View style={styles.viewSaludo}>
           <View style={styles.holaSofiaStack}>
-            <Text style={styles.holaSofia}>Hola {user.fullName}</Text>
+            <Text style={styles.holaSofia}>Hola {user.Nombre}</Text>
             <Text style={styles.text}>En que te podemos ayudar?</Text>
           </View>
         </View>
@@ -99,7 +98,9 @@ export default function Home({ navigation }) {
             <FontAwesome name="money" style={styles.icon3}></FontAwesome>
             <Text style={styles.facturar}>Facturar</Text>
           </Pressable>
-          <Pressable style={styles.buttonPerfil}>
+          <Pressable style={styles.buttonPerfil}
+          onPress={() => navigation.navigate("Profile")}
+          >
             <FontAwesome name="user" style={styles.icon4}></FontAwesome>
             <Text style={styles.perfil}>Perfil</Text>
           </Pressable>

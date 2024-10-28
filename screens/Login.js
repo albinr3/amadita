@@ -42,17 +42,17 @@ export default function Login({ navigation }) {
       setUser(userDoc.data().dataUser);  // Actualiza el contexto
     }
 
-      navigation.replace("Home");
+      navigation.navigate("MainStack");
     } catch (error) {
       switch (error.code) {
         case 'auth/user-not-found':
-          alert("User not found");
+          alert("Usuario no encontrado");
           break;
         case 'auth/wrong-password':
-          alert("Incorrect password");
+          alert("Contraseña incorrecta");
           break;
         default:
-          alert("Login failed, try again later");
+          alert("Fallo al iniciar sesion, intentar luego");
       }
       console.error("Error when logging in:", error);
     } finally {
@@ -76,7 +76,7 @@ export default function Login({ navigation }) {
         style={styles.input}
         placeholderTextColor="#aaa"
         secureTextEntry
-        placeholder="Password"
+        placeholder="Contraseña"
         onChangeText={(text) => setPassword(text)}
         value={password}
         underlineColorAndroid="transparent"
@@ -87,14 +87,14 @@ export default function Login({ navigation }) {
         <ActivityIndicator size="large" color="rgba(253,72,122,1)" />
       ) : (
         <Pressable style={styles.button} onPress={() => onLoginPress()}>
-          <Text style={styles.buttonTitle}>Log in</Text>
+          <Text style={styles.buttonTitle}>Iniciar sesion</Text>
         </Pressable>
       )}
       <View style={styles.footerView}>
         <Text style={styles.footerText}>
-          Don't have an account?{" "}
+          ¿No tienes cuenta?{" "}
           <Text onPress={onFooterLinkPress} style={styles.footerLink}>
-            Sign up
+            Registrarse
           </Text>
         </Text>
       </View>
@@ -118,7 +118,8 @@ const styles = StyleSheet.create({
     height: 120,
     width: 210,
     alignSelf: "center",
-    margin: 30
+    marginHorizontal: 30,
+    marginTop: 80
   },
   input: {
     height: 48,
