@@ -21,12 +21,14 @@ import LocationsMap from "../screens/LocationsMap";
 import Pruebas from "../screens/Pruebas";
 import Profile from "../screens/Profile";
 import EditProfile from "../screens/EditProfile";
+import { Facturar } from "../screens/Facturar";
 
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { FIREBASE_DB } from "../firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import { signOut } from "firebase/auth";
+import Solicitud from "../screens/Solicitud";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -66,6 +68,18 @@ const MainStack = () => (
       name="Profile"
       component={Profile}
       options={{ title: "Perfil", headerShown: true }}
+    />
+
+    <Stack.Screen
+      name="Facturar"
+      component={Facturar}
+      options={{ title: "Facturas", headerShown: true }}
+    />
+
+<Stack.Screen
+      name="Solicitud"
+      component={Solicitud}
+      options={{ title: "Solicitud", headerShown: true }}
     />
     <Stack.Screen name="Test" component={Test} />
   </Stack.Navigator>

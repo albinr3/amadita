@@ -94,7 +94,9 @@ export default function Home({ navigation }) {
             <FontAwesome name="bug" style={styles.iconPrueba}></FontAwesome>
             <Text style={styles.pruebas}>Pruebas</Text>
           </Pressable>
-          <Pressable style={styles.buttonFacturar}>
+          <Pressable style={styles.buttonFacturar}
+          onPress={() => navigation.navigate("Facturar")}
+          >
             <FontAwesome name="money" style={styles.icon3}></FontAwesome>
             <Text style={styles.facturar}>Facturar</Text>
           </Pressable>
