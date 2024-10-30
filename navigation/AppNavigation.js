@@ -8,7 +8,7 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "./UserContext";
-import { StatusBar } from "react-native";
+import { StatusBar, Image, StyleSheet, Dimensions } from "react-native";
 
 import Home from "../screens/Home";
 import Results from "../screens/Results";
@@ -32,55 +32,21 @@ import Solicitud from "../screens/Solicitud";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
+const { width, height } = Dimensions.get('window');
 
 // Stack Navigator para pantallas adicionales
 const MainStack = () => (
   <Stack.Navigator>
-    <Stack.Screen
-      name="Home"
-      component={Home}
-      options={{ headerShown: false }}
-    />
+    <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
     <Stack.Screen name="Pruebas" component={Pruebas} />
-    <Stack.Screen
-      name="LocationsMap"
-      component={LocationsMap}
-      options={{ headerTitle: "Sucursales" }}
-    />
+    <Stack.Screen name="LocationsMap" component={LocationsMap} options={{ headerTitle: "Sucursales" }} />
     <Stack.Screen name="Analisis" component={Analisis} />
-    <Stack.Screen
-      name="Results"
-      component={Results}
-      options={{ headerTitle: "Resultados" }}
-    />
-    <Stack.Screen
-      name="PdfViewer"
-      component={PdfViewer}
-      options={{ headerTitle: "Visor de Análisis" }}
-    />
-    <Stack.Screen
-      name="EditProfile"
-      component={EditProfile}
-      options={{ headerTitle: "Editar Perfil" }}
-    />
-
-    <Stack.Screen
-      name="Profile"
-      component={Profile}
-      options={{ title: "Perfil", headerShown: true }}
-    />
-
-    <Stack.Screen
-      name="Facturar"
-      component={Facturar}
-      options={{ title: "Facturas", headerShown: true }}
-    />
-
-<Stack.Screen
-      name="Solicitud"
-      component={Solicitud}
-      options={{ title: "Solicitud", headerShown: true }}
-    />
+    <Stack.Screen name="Results" component={Results} options={{ headerTitle: "Resultados" }} />
+    <Stack.Screen name="PdfViewer" component={PdfViewer} options={{ headerTitle: "Visor de Análisis" }} />
+    <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerTitle: "Editar Perfil" }} />
+    <Stack.Screen name="Profile" component={Profile} options={{ title: "Perfil", headerShown: true }} />
+    <Stack.Screen name="Facturar" component={Facturar} options={{ title: "Facturas", headerShown: true }} />
+    <Stack.Screen name="Solicitud" component={Solicitud} options={{ title: "Solicitud", headerShown: true }} />
     <Stack.Screen name="Test" component={Test} />
   </Stack.Navigator>
 );
@@ -88,17 +54,17 @@ const MainStack = () => (
 // Drawer Navigator principal
 const AppNavigation = () => {
   const [loading, setLoading] = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
   const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
+    setTimeout(() => setShowSplash(false), 2000); // Ajusta el tiempo de splash según sea necesario
+
     const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (userData) => {
       if (userData) {
         const usersCollection = collection(FIREBASE_DB, "users");
-        const q = query(
-          usersCollection,
-          where("dataUser.email", "==", userData.email)
-        );
-
+        const q = query(usersCollection, where("dataUser.email", "==", userData.email));
+        
         try {
           const querySnapshot = await getDocs(q);
           if (!querySnapshot.empty) {
@@ -118,32 +84,31 @@ const AppNavigation = () => {
     return () => unsubscribe();
   }, []);
 
-  if (loading) {
-    return <></>;
+  if (loading || showSplash) {
+    return (
+      <Image
+        style={styles.splashImage}
+        source={require('../assets/splash.gif')}
+        resizeMode="cover"
+      />
+    );
   }
+
   const CustomDrawerContent = (props) => {
     const functionSignOut = () => {
       signOut(FIREBASE_AUTH)
         .then(() => {
-          // Sign-out successful.
           console.log("Sign out successful");
-          //props.navigation.jumpTo("Login");
           setUser(null);
           props.navigation.closeDrawer();
         })
-        .catch((error) => {
-          // An error happened.
-          console.error("Sign-out error:", error);
-        });
+        .catch((error) => console.error("Sign-out error:", error));
     };
 
     return (
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
-        <DrawerItem
-          label="Cerrar sesión"
-          onPress={functionSignOut} // Ejecuta el cierre de sesión al presionar
-        />
+        <DrawerItem label="Cerrar sesión" onPress={functionSignOut} />
       </DrawerContentScrollView>
     );
   };
@@ -153,43 +118,36 @@ const AppNavigation = () => {
       <StatusBar backgroundColor="black" translucent={true} />
 
       <Drawer.Navigator
-        drawerContent={(props) => <CustomDrawerContent {...props} />} // Drawer personalizado
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
         screenOptions={{
           drawerStyle: {
-            marginTop: StatusBar.currentHeight, // Margen superior igual a la altura del StatusBar
-            paddingTop: 10, // Espacio adicional si deseas separarlo más
+            marginTop: StatusBar.currentHeight,
+            paddingTop: 10,
           },
           headerShown: false,
         }}
         initialRouteName={user ? "MainStack" : "Login"}
       >
-        {/* Si el usuario está autenticado, mostrar el stack con Drawer */}
         {user ? (
-          <>
-            <Drawer.Screen
-              name="MainStack"
-              component={MainStack}
-              options={{ title: "Inicio" }}
-            />
-          </>
+          <Drawer.Screen name="MainStack" component={MainStack} options={{ title: "Inicio" }} />
         ) : (
-          // Si el usuario no está autenticado, mostrar Login y Registro
           <>
-            <Drawer.Screen
-              name="Login"
-              component={Login}
-              options={{ headerShown: false }}
-            />
-            <Drawer.Screen
-              name="RegistrationScreen"
-              component={RegistrationScreen}
-              options={{ headerShown: false }}
-            />
+            <Drawer.Screen name="Login" component={Login} options={{ headerShown: false }} />
+            <Drawer.Screen name="RegistrationScreen" component={RegistrationScreen} options={{ headerShown: false }} />
           </>
         )}
       </Drawer.Navigator>
     </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  splashImage: {
+    ...StyleSheet.absoluteFillObject,
+
+    width: width,
+    height: height,
+  },
+});
 
 export default AppNavigation;
