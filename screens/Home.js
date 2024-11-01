@@ -77,7 +77,7 @@ export default function Home({ navigation }) {
         </View>
         <View style={styles.viewBotones}>
           <Pressable style={styles.buttonSucursales}
-          onPress={() => navigation.navigate("LocationsMap")}>
+          onPress={() => navigation.navigate("BannerCarousel")}>
             <FontAwesome name="map-marker" style={styles.iconMap}></FontAwesome>
             <Text style={styles.sucursales}>Sucursales</Text>
           </Pressable>

@@ -29,6 +29,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import { signOut } from "firebase/auth";
 import Solicitud from "../screens/Solicitud";
+import BannerCarousel from "../screens/BannerCarousel"
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -48,6 +49,7 @@ const MainStack = () => (
     <Stack.Screen name="Facturar" component={Facturar} options={{ title: "Facturas", headerShown: true }} />
     <Stack.Screen name="Solicitud" component={Solicitud} options={{ title: "Solicitud", headerShown: true }} />
     <Stack.Screen name="Test" component={Test} />
+    <Stack.Screen name="BannerCarousel" component={BannerCarousel} /> 
   </Stack.Navigator>
 );
 
