@@ -4,6 +4,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { FIREBASE_DB } from "../firebaseConfig";
 import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../navigation/UserContext"; // Importa el contexto
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 function Analisis({ navigation, route, ...props }) {
   const [loading, setLoading] = useState(true);
@@ -37,7 +38,7 @@ const analisisArray = Object.values(details.text);
             <Text style={styles.textoPrueba}>{analisisInn.text}</Text>
           </View>
           <View style={styles.viewLogo}>
-            <Icon name="arrow-right-circle-outline" style={styles.icon}></Icon>
+            <FontAwesome5 name="eye" size={24} style={styles.icon}/>
           </View>
         </Pressable>
         </>
@@ -80,8 +81,8 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   icon: {
-    color: "rgba(255,2,143,1)",
-    fontSize: 40,
+    color: "#0073c6",
+    fontSize: 35,
     alignSelf: "center",
   },
   botonPrueba: {

@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
   },
   buttonResultados: {
     ...button,
-    backgroundColor: "#1b5ba4",
+    backgroundColor: "#0073c6",
     width: 140,
     height: 140,
     flexBasis: "47%"
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
   },
   buttonFacturar: {
     ...button,
-    backgroundColor: "#1b5ba4",
+    backgroundColor: "#0073c6",
     width: 140,
     height: 140,
     flexBasis: "47%"

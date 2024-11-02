@@ -1,9 +1,12 @@
-import { StyleSheet, View, Text, Pressable, FlatList } from "react-native";
+import { StyleSheet, View, Text, Pressable, FlatList, Dimensions } from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useEffect, useContext, useState, useCallback } from "react";
 import { UserContext } from "../navigation/UserContext"; // Importa el contexto
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { FIREBASE_DB } from "../firebaseConfig";
+import Entypo from '@expo/vector-icons/Entypo';
+
+const { width, height } = Dimensions.get("window");
 
 function Results({ navigation }) {
   //route?.params?.user || rest.user.dataUser;
@@ -88,18 +91,21 @@ useEffect(() => {
       <View style={styles.container}>
         <View style={styles.viewLogo}>
           <View style={styles.viewCirclelogo}>
-            <Icon name="clipboard-pulse" style={styles.icon}></Icon>
+            <Entypo name="text-document" style={styles.icon}/>
           </View>
         </View>
         <View style={styles.viewTexts}>
           <Text style={styles.fecha}>{formatearFecha(analisisInn.fecha)}</Text>
-          <Text style={styles.textId}>ID: 18466089</Text>
-          <Pressable
-            style={styles.buttonVerResultados}
-            onPress={() => navigation.navigate("Analisis", {analisisId : analisisInn.analisisId})}
-          >
-            <Text style={styles.verResultados}>VER RESULTADOS</Text>
-          </Pressable>
+          <View style={styles.viewBtn}>
+            <Text style={styles.textId}>ID: 18466089</Text>
+            <Pressable
+              style={styles.buttonVerResultados}
+              onPress={() => navigation.navigate("Analisis", {analisisId : analisisInn.analisisId})}
+            >
+              <Text style={styles.verResultados}>VER RESULTADOS</Text>
+            </Pressable>
+          </View>
+          
         </View>
       </View>
     );
@@ -131,37 +137,35 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     flexDirection: "row",
     width: "100%",
-    height: 164,
+    paddingVertical: height * 0.03,
     backgroundColor: "white",
+    paddingHorizontal: 10,
+    alignItems: "center"
   },
   viewLogo: {
     width: 81,
-    alignSelf: "flex-start",
-    alignItems: "center",
+    alignItems: "left",
     height: 68,
-    marginBottom: 24,
-    marginTop: 24,
-    marginRight: 6,
+    justifyContent: "center",
   },
   viewCirclelogo: {
     width: 68,
     height: 68,
-    backgroundColor: "rgba(255,226,242,0.55)",
+    backgroundColor: "#0073c613",
     borderRadius: 100,
     justifyContent: "center",
   },
   icon: {
-    color: "rgba(255,2,143,1)",
+    color: "#0073c6",
     fontSize: 40,
     alignSelf: "center",
   },
   viewTexts: {
-    alignSelf: "stretch",
+    
     flex: 1,
-    justifyContent: "space-between",
+    
     alignItems: "flex-start",
-    marginBottom: 24,
-    marginTop: 24,
+    
   },
   fecha: {
     fontFamily: "Roboto_700Bold",
@@ -172,10 +176,12 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto_400Regular",
     color: "#121212",
     fontSize: 16,
+    justifyContent: "center",
+    alignSelf: "center"
   },
   buttonVerResultados: {
-    width: 125,
-    height: 32,
+    width: 130,
+    height: 34,
     borderWidth: 1,
     borderColor: "rgba(211,210,210,1)",
     borderStyle: "solid",
@@ -185,11 +191,17 @@ const styles = StyleSheet.create({
   },
   verResultados: {
     fontFamily: "Roboto_700Bold",
-    color: "rgba(255,2,143,1)",
-    fontSize: 13,
+    color: "#0073c6",
+    fontSize: 14,
     textAlign: "center",
     alignSelf: "center",
   },
+  viewBtn: {
+    flexDirection: "row",
+    marginTop: 10,
+    width: "100%",
+    justifyContent: "space-between"
+  }
 });
 
 export default Results;

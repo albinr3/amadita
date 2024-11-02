@@ -5,7 +5,6 @@ import {
   TextInput,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
   Pressable,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -13,6 +12,7 @@ import SkeletonLoading from "expo-skeleton-loading";
 import { FIREBASE_DB } from "../firebaseConfig";
 import { collection, setDoc, doc, addDoc } from "firebase/firestore";
 import { getDocs, query, where } from "firebase/firestore";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const Pruebas = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,9 +40,8 @@ const Pruebas = () => {
       querySnapshot.forEach((doc) => {
         nuevasPruebas.push(doc.data());
       });
-      
-      setPruebas(nuevasPruebas); 
 
+      setPruebas(nuevasPruebas);
     } catch (error) {
       console.error("Error al obtener los análisis: ", error);
     } finally {
@@ -53,7 +52,7 @@ const Pruebas = () => {
   // useEffect para obtener las pruebas cuando el componente se monta
   useEffect(() => {
     fetchPruebas();
-  }, []); 
+  }, []);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -68,9 +67,10 @@ const Pruebas = () => {
   };
 
   const renderTestItem = ({ item }) => (
-    <TouchableOpacity style={styles.testItem}>
+    <Pressable style={styles.testItem}>
+      <MaterialCommunityIcons name="test-tube" style={styles.icon} />
       <Text style={styles.testItemText}>{item.nombre}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (
@@ -183,10 +183,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 1.41,
     elevation: 2,
+    flexDirection: "row"
   },
   testItemText: {
     fontSize: 16,
     color: "black",
+    
+    flexShrink: 1
+  },
+  icon: {
+    color: "#0073c6",
+    fontSize: 25,
+    alignSelf: "center",
   },
 });
 
