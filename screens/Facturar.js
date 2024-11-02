@@ -13,6 +13,9 @@ import { ScrollView } from "react-native-gesture-handler";
 
 const { width, height } = Dimensions.get("window");
 
+
+
+
 export const Facturar = ({navigation}) => {
   const [facturas, setFacturas] = useState([
     {
@@ -73,6 +76,8 @@ export const Facturar = ({navigation}) => {
     },
   ]);
 
+
+
   const [showPopup, setShowPopup] = useState(false);
 
 
@@ -101,14 +106,14 @@ export const Facturar = ({navigation}) => {
             <View style={styles.ViewButtons}>
               <Pressable
                 style={styles.buttonVerSolicitud}
-                onPress={() => navigation.navigate("Analisis")}
+                onPress={() => navigation.navigate("PdfViewer2")}
               >
                 <Text style={styles.verResultados}>VER SOLICITUD</Text>
               </Pressable>
 
               <Pressable
                 style={styles.buttonVerFactura}
-                onPress={() => navigation.navigate("Analisis")}
+                onPress={() => navigation.navigate("PdfViewer2")}
               >
                 <Text style={styles.textVerFactura}>VER FACTURA</Text>
               </Pressable>
@@ -272,7 +277,7 @@ const styles = StyleSheet.create({
   textButton: {
     fontFamily: "Roboto_700Bold",
     color: "#ffffff",
-    fontSize: 13,
+    fontSize: 16,
     textAlign: "center",
     alignSelf: "center",
   },

@@ -22,14 +22,16 @@ import Pruebas from "../screens/Pruebas";
 import Profile from "../screens/Profile";
 import EditProfile from "../screens/EditProfile";
 import { Facturar } from "../screens/Facturar";
+import Solicitud from "../screens/Solicitud";
+import BannerCarousel from "../screens/BannerCarousel"
+import PdfViewer2 from "../screens/PdfViewer2";
 
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { FIREBASE_DB } from "../firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import { signOut } from "firebase/auth";
-import Solicitud from "../screens/Solicitud";
-import BannerCarousel from "../screens/BannerCarousel"
+
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -50,6 +52,7 @@ const MainStack = () => (
     <Stack.Screen name="Solicitud" component={Solicitud} options={{ title: "Solicitud", headerShown: true }} />
     <Stack.Screen name="Test" component={Test} />
     <Stack.Screen name="BannerCarousel" component={BannerCarousel} /> 
+    <Stack.Screen name="PdfViewer2" component={PdfViewer2} options={{ headerTitle: "Visor de Análisis" }} />
   </Stack.Navigator>
 );
 
@@ -126,9 +129,11 @@ const AppNavigation = () => {
             marginTop: StatusBar.currentHeight,
             paddingTop: 10,
           },
+          drawerPosition: "right",
           headerShown: false,
         }}
         initialRouteName={user ? "MainStack" : "Login"}
+        
       >
         {user ? (
           <Drawer.Screen name="MainStack" component={MainStack} options={{ title: "Inicio" }} />

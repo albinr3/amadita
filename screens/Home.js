@@ -1,6 +1,7 @@
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable, Dimensions } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import {
   useFonts,
   Roboto_400Regular,
@@ -9,14 +10,59 @@ import {
 } from "@expo-google-fonts/roboto";
 import { Image } from "expo-image";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import { UserContext } from "../navigation/UserContext"; // Importa el contexto
+import Carousel from "react-native-reanimated-carousel";
+import Dots from "react-native-dots-pagination";
+
+//banner
+const { width, height } = Dimensions.get("window");
+const aspectRatio = 16 / 9; // Para mantener el formato 16:9
 
 export default function Home({ navigation }) {
   const { user, setUser } = useContext(UserContext); // Acceder al usuario desde el contexto
   SplashScreen.preventAutoHideAsync();
+
+  // Importa las imágenes del banner
+  const banners = [
+    { id: "1", image: require("../assets/images/ban1.jpg") },
+    { id: "2", image: require("../assets/images/ban2.jpg") },
+    { id: "3", image: require("../assets/images/ban3.jpg") },
+  ];
+  const BannerCarousel = () => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    return (
+      <View style={styles.carouselContainer}>
+        <Carousel
+          width={width}
+          height={width / aspectRatio}
+          data={banners}
+          autoPlay
+          autoPlayInterval={4000} // Cambia cada 4 segundos
+          loop
+          onSnapToItem={(index) => setCurrentIndex(index)} // Actualiza el índice al deslizar
+          renderItem={({ item }) => (
+            <View style={styles.bannerContainer}>
+              <Image source={item.image} style={styles.bannerImage} />
+            </View>
+          )}
+        />
+
+        {/* Puntos de paginación */}
+        <View style={styles.paginationContainer}>
+          <Dots
+            length={banners.length}
+            active={currentIndex}
+            activeColor="#007AFF" // Color del punto activo
+            passiveColor="#CCCCCC" // Color de los puntos inactivos
+          />
+        </View>
+      </View>
+    );
+  };
 
   const [loaded, error] = useFonts({
     Roboto_400Regular,
@@ -45,7 +91,7 @@ export default function Home({ navigation }) {
         // Sign-out successful.
         console.log("Sign out successful");
         //navigation.navigate("Login");
-        setUser(null)
+        setUser(null);
       })
       .catch((error) => {
         // An error happened.
@@ -54,57 +100,75 @@ export default function Home({ navigation }) {
   };
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.configIconRow}>
-          <Pressable onPress={() => navigation.toggleDrawer()}>
-            <Feather name="settings" style={styles.configIcon}></Feather>
-          </Pressable>
-          <Image
-            source={require("../assets/images/amadita.png")}
-            contentFit="contain"
-            style={styles.logo}
-          ></Image>
+      <View style={styles.configIconRow}>
+        <Image
+          source={require("../assets/images/logo.png")}
+          contentFit="cover"
+          style={styles.logo}
+        ></Image>
+        <Pressable onPress={() => navigation.toggleDrawer()}>
+          <Feather name="settings" style={styles.configIcon}></Feather>
+        </Pressable>
 
-          <Feather name="bell" style={styles.notificationIcon}></Feather>
-        </View>
+        {/* <Feather name="bell" style={styles.notificationIcon}></Feather> */}
       </View>
+      {/* fin header */}
+
       <View style={styles.rect2}>
-        <View style={styles.viewSaludo}>
+        <BannerCarousel />
+        {/* <View style={styles.viewSaludo}>
           <View style={styles.holaSofiaStack}>
             <Text style={styles.holaSofia}>Hola {user.Nombre}</Text>
             <Text style={styles.text}>En que te podemos ayudar?</Text>
           </View>
-        </View>
+        </View> */}
         <View style={styles.viewBotones}>
-          <Pressable style={styles.buttonSucursales}
-          onPress={() => navigation.navigate("BannerCarousel")}>
-            <FontAwesome name="map-marker" style={styles.iconMap}></FontAwesome>
-            <Text style={styles.sucursales}>Sucursales</Text>
-          </Pressable>
+          
           <Pressable
             style={styles.buttonResultados}
             onPress={() => navigation.navigate("Results")}
           >
             <FontAwesome name="newspaper-o" style={styles.icon2}></FontAwesome>
-            <Text style={styles.resultados}>Resultados</Text>
+            <Text style={[styles.textButton, {fontSize: 22}]}>Resultados</Text>
           </Pressable>
-          <Pressable style={styles.buttonPrueba}
-          onPress={() => navigation.navigate("Pruebas")}>
-          
-            <FontAwesome name="bug" style={styles.iconPrueba}></FontAwesome>
-            <Text style={styles.pruebas}>Pruebas</Text>
-          </Pressable>
-          <Pressable style={styles.buttonFacturar}
-          onPress={() => navigation.navigate("Facturar")}
+          <Pressable
+            style={styles.buttonFacturar}
+            onPress={() => navigation.navigate("Facturar")}
           >
             <FontAwesome name="money" style={styles.icon3}></FontAwesome>
-            <Text style={styles.facturar}>Facturar</Text>
+            <Text style={[styles.textButton, {fontSize: 22}]}>Facturar</Text>
           </Pressable>
-          <Pressable style={styles.buttonPerfil}
-          onPress={() => navigation.navigate("Profile")}
+          <Pressable
+            style={styles.buttonPrueba}
+            onPress={() => navigation.navigate("Pruebas")}
+          >
+            <FontAwesome name="bug" style={styles.iconPrueba}></FontAwesome>
+            <Text style={styles.textButton}>Pruebas</Text>
+          </Pressable>
+          
+          <Pressable
+            style={styles.buttonPerfil}
+            onPress={() => navigation.navigate("Profile")}
           >
             <FontAwesome name="user" style={styles.icon4}></FontAwesome>
-            <Text style={styles.perfil}>Perfil</Text>
+            <Text style={styles.textButton}>Perfil</Text>
+          </Pressable>
+          <Pressable
+            style={styles.buttonSucursales}
+            onPress={() => navigation.navigate("BannerCarousel")}
+          >
+            <FontAwesome name="map-marker" style={styles.iconMap}></FontAwesome>
+            <Text style={styles.textButton}>Sucursales</Text>
+          </Pressable>
+          <Pressable
+            style={styles.buttonPerfil}
+            onPress={() => navigation.navigate("Profile")}
+          >
+            <MaterialCommunityIcons
+              name="image-album"
+              style={styles.icon4}
+            ></MaterialCommunityIcons>
+            <Text style={styles.textButton}>Blog</Text>
           </Pressable>
         </View>
       </View>
@@ -112,26 +176,29 @@ export default function Home({ navigation }) {
   );
 }
 
+// Declara el estilo base 'button' fuera de StyleSheet.create
+const button = {
+  width: "1%",
+  height: 105,
+  borderRadius: 10,
+  marginBottom: 5,
+  alignItems: "center",
+  justifyContent: "center",
+  flexBasis: "40%"
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "rgba(253,252,252,1)",
   },
-  header: {
-    height: 80,
-    backgroundColor: "rgba(253,252,252,1)",
-    flexDirection: "row",
-    marginTop: 39,
-  },
   configIcon: {
     color: "rgba(128,128,128,1)",
-    fontSize: 32,
-    marginTop: 50,
+    fontSize: 30,
   },
   logo: {
-    width: 140,
-    height: 140,
-    marginLeft: 69,
+    width: 80,
+    height: 80,
   },
   notificationIcon: {
     color: "rgba(128,128,128,1)",
@@ -140,20 +207,19 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   configIconRow: {
-    height: 140,
+    marginTop: 28,
     flexDirection: "row",
-    flex: 1,
-    marginRight: 24,
-    marginLeft: 16,
-    marginTop: -31,
+    paddingHorizontal: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "white"
   },
   rect2: {
-    width: 375,
-    height: 692,
+    width: "100%",
     marginTop: 1,
   },
   viewSaludo: {
-    height: 100,
+    height: height * 0.14,
     marginTop: 71,
   },
   holaSofia: {
@@ -181,22 +247,20 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   viewBotones: {
-    height: 519,
     flexDirection: "row",
     justifyContent: "space-around",
     flexWrap: "wrap",
-    marginTop: 14,
+    marginTop: 20,
+    paddingHorizontal:5
   },
+
   buttonSucursales: {
-    width: 115,
-    height: 115,
-    backgroundColor: "rgba(72,95,253,1)",
-    borderRadius: 81,
-    marginBottom: 5,
-    alignItems: "center",
-    justifyContent: "center",
+    ...button,
+    backgroundColor: "#DB5B3A",
+    
   },
-  sucursales: {
+
+  textButton: {
     fontFamily: "Roboto_500Medium",
     color: "rgba(251,248,248,1)",
     fontSize: 18,
@@ -204,92 +268,69 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 0,
   },
+
   iconMap: {
     color: "rgba(255,255,255,1)",
     fontSize: 38,
   },
   buttonResultados: {
-    width: 115,
-    height: 115,
-    backgroundColor: "rgba(253,72,122,1)",
-    borderRadius: 81,
-    marginBottom: 5,
-    alignItems: "center",
-    justifyContent: "center",
+    ...button,
+    backgroundColor: "#1b5ba4",
+    width: 140,
+    height: 140,
+    flexBasis: "47%"
   },
-  resultados: {
-    fontFamily: "Roboto_500Medium",
-    color: "rgba(251,248,248,1)",
-    fontSize: 18,
-    alignItems: "center",
-    alignSelf: "center",
-    marginTop: 0,
-  },
+
   icon2: {
     color: "rgba(255,255,255,1)",
-    fontSize: 38,
+    fontSize: 48,
   },
   buttonPrueba: {
-    width: 115,
-    height: 115,
-    backgroundColor: "rgba(189,16,224,1)",
-    borderRadius: 81,
-    marginBottom: 5,
-    alignItems: "center",
-    justifyContent: "center",
+    ...button,
+    backgroundColor: "#DB5B3A",
   },
-  pruebas: {
-    fontFamily: "Roboto_500Medium",
-    color: "rgba(251,248,248,1)",
-    fontSize: 18,
-    alignItems: "center",
-    alignSelf: "center",
-    marginTop: 0,
-  },
+
   iconPrueba: {
     color: "rgba(255,255,255,1)",
     fontSize: 38,
   },
   buttonFacturar: {
-    width: 115,
-    height: 115,
-    backgroundColor: "rgba(72,194,253,1)",
-    borderRadius: 81,
-    marginBottom: 5,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  facturar: {
-    fontFamily: "Roboto_500Medium",
-    color: "rgba(251,248,248,1)",
-    fontSize: 18,
-    alignItems: "center",
-    alignSelf: "center",
-    marginTop: 0,
+    ...button,
+    backgroundColor: "#1b5ba4",
+    width: 140,
+    height: 140,
+    flexBasis: "47%"
   },
   icon3: {
     color: "rgba(255,255,255,1)",
-    fontSize: 38,
+    fontSize: 48,
   },
   buttonPerfil: {
-    width: 115,
-    height: 115,
-    backgroundColor: "rgba(253,159,72,1)",
-    borderRadius: 81,
-    marginBottom: 5,
-    alignItems: "center",
-    justifyContent: "center",
+    ...button,
+    backgroundColor: "#DB5B3A",
   },
-  perfil: {
-    fontFamily: "Roboto_500Medium",
-    color: "rgba(251,248,248,1)",
-    fontSize: 18,
-    alignItems: "center",
-    alignSelf: "center",
-    marginTop: 0,
-  },
+
   icon4: {
     color: "rgba(255,255,255,1)",
     fontSize: 38,
+  },
+
+  carouselContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: width / aspectRatio,
+  },
+  bannerContainer: {
+    width: width,
+    height: width / aspectRatio,
+  },
+  bannerImage: {
+    width: "100%",
+    height: "100%",
+    contentFit: "cover",
+  },
+  paginationContainer: {
+    // Ajusta este valor para colocar los puntos más arriba o más abajo
+    width: "100%",
   },
 });

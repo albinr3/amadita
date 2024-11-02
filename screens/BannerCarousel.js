@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, Dimensions, StyleSheet } from 'react-native';
+import { View, Text, Image, Dimensions, StyleSheet } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import Dots from 'react-native-dots-pagination';
 
@@ -36,12 +36,13 @@ const BannerCarousel = () => {
 
       {/* Puntos de paginación */}
       <View style={styles.paginationContainer}>
-        <Dots
+         <Dots
           length={banners.length}
           active={currentIndex}
           activeColor="#007AFF" // Color del punto activo
           passiveColor="#CCCCCC" // Color de los puntos inactivos
-        />
+        /> 
+       
       </View>
     </View>
   );
@@ -69,7 +70,8 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth:10
+    borderWidth:10,
+ 
     
     // Asegúrate de que estén centrados horizontalmente
   },
