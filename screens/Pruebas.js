@@ -10,8 +10,8 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 import SkeletonLoading from "expo-skeleton-loading";
 import { FIREBASE_DB } from "../firebaseConfig";
-import { collection, setDoc, doc, addDoc } from "firebase/firestore";
-import { getDocs, query, where } from "firebase/firestore";
+import { collection, } from "firebase/firestore";
+import { getDocs, query, } from "firebase/firestore";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const Pruebas = () => {
@@ -68,7 +68,8 @@ const Pruebas = () => {
 
   const renderTestItem = ({ item }) => (
     <Pressable style={styles.testItem}>
-      <MaterialCommunityIcons name="test-tube" style={styles.icon} />
+      <MaterialCommunityIcons name="test-tube" 
+      style={item.tipo === "orina" ? styles.iconOrina : item.tipo === "coprologico" ? styles.iconCoprologico : styles.iconHemograma} />
       <Text style={styles.testItemText}>{item.nombre}</Text>
     </Pressable>
   );
@@ -191,8 +192,18 @@ const styles = StyleSheet.create({
     
     flexShrink: 1
   },
-  icon: {
-    color: "#0073c6",
+  iconOrina: {
+    color: "#fdfb6b",
+    fontSize: 25,
+    alignSelf: "center",
+  },
+  iconCoprologico: {
+    color: "#c65c00",
+    fontSize: 25,
+    alignSelf: "center",
+  },
+  iconHemograma: {
+    color: "#ff1919",
     fontSize: 25,
     alignSelf: "center",
   },

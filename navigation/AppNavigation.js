@@ -25,6 +25,7 @@ import { Facturar } from "../screens/Facturar";
 import Solicitud from "../screens/Solicitud";
 import BannerCarousel from "../screens/BannerCarousel"
 import PdfViewer2 from "../screens/PdfViewer2";
+import BlogList from "../screens/BlogList";
 
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { FIREBASE_DB } from "../firebaseConfig";
@@ -46,13 +47,20 @@ const MainStack = () => (
     <Stack.Screen name="Analisis" component={Analisis} />
     <Stack.Screen name="Results" component={Results} options={{ headerTitle: "Resultados" }} />
     <Stack.Screen name="PdfViewer" component={PdfViewer} options={{ headerTitle: "Visor de Análisis" }} />
-    <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerTitle: "Editar Perfil" }} />
-    <Stack.Screen name="Profile" component={Profile} options={{ title: "Perfil", headerShown: true }} />
+    <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerTitle: "Editar Perfil", headerShadowVisible: false, headerTitleStyle: {
+              color: '#0169b3', // Cambia el color del título
+              fontSize: 18 // Puedes agregar otras propiedades, como tamaño de fuente
+            }, }} />
+    <Stack.Screen name="Profile" component={Profile} options={{ headerTitle: "Perfil", headerShadowVisible: false, headerTitleStyle: {
+              color: '#0169b3', // Cambia el color del título
+              fontSize: 18 // Puedes agregar otras propiedades, como tamaño de fuente
+            }, }} />
     <Stack.Screen name="Facturar" component={Facturar} options={{ title: "Facturas", headerShown: true }} />
     <Stack.Screen name="Solicitud" component={Solicitud} options={{ title: "Solicitud", headerShown: true }} />
     <Stack.Screen name="Test" component={Test} />
     <Stack.Screen name="BannerCarousel" component={BannerCarousel} /> 
     <Stack.Screen name="PdfViewer2" component={PdfViewer2} options={{ headerTitle: "Visor de Análisis" }} />
+    <Stack.Screen name="BlogList" component={BlogList} options={{ headerTitle: "Lista de articulos" }} />
   </Stack.Navigator>
 );
 

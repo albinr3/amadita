@@ -13,6 +13,7 @@ function Results({ navigation }) {
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext); // Acceder al usuario desde el contexto
   const { analisis, setAnalisis } = useContext(UserContext); // Acceder al análisis desde el contexto
+  const [cantidadAnalisisIn, setCantidadAnalisisIn] = useState("")
 
   // Función para obtener los análisis del usuario
   const fetchUserAnalisis = async (userId) => {
@@ -39,13 +40,13 @@ function Results({ navigation }) {
       });
 
       setAnalisis(nuevosAnalisis); // Reemplaza el estado de analisis en lugar de concatenarlo
+      setCantidadAnalisisIn(Object.keys(nuevosAnalisis[0].text).length)
     } catch (error) {
       console.error("Error al obtener los análisis: ", error);
     } finally {
       setLoading(false); // Asegúrate de que el estado de loading se actualice al final
     }
   };
-
 
 // useEffect para obtener los análisis cuando el componente se monta
 useEffect(() => {
@@ -96,6 +97,7 @@ useEffect(() => {
         </View>
         <View style={styles.viewTexts}>
           <Text style={styles.fecha}>{formatearFecha(analisisInn.fecha)}</Text>
+          <Text style={styles.textCantidad}>Cant. de pruebas: {cantidadAnalisisIn}</Text>
           <View style={styles.viewBtn}>
             <Text style={styles.textId}>ID: 18466089</Text>
             <Pressable
@@ -176,8 +178,13 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto_400Regular",
     color: "#121212",
     fontSize: 16,
-    justifyContent: "center",
-    alignSelf: "center"
+    
+  },
+  textCantidad: {
+    fontFamily: "Roboto_400Regular",
+    color: "#121212",
+    fontSize: 16,
+    marginTop: 4
   },
   buttonVerResultados: {
     width: 130,

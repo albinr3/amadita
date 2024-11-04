@@ -38,7 +38,8 @@ function Profile({ navigation }) {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.mainContainer}>
+<View style={styles.container}>
       <View style={styles.viewArriba}>
         <View style={styles.viewImagen}>
           <Pressable style={styles.imagen} onPress={() => setHasImage(true)}>
@@ -56,17 +57,14 @@ function Profile({ navigation }) {
           </Pressable>
         </View>
         <Text style={styles.textName}>{user.Nombre} {user.Apellido}</Text>
-        <Pressable style={styles.buttonCambiar}>
-          <Text style={styles.loremIpsum}>CAMBIAR PERFIL DE PACIENTE</Text>
-        </Pressable>
-        <Pressable
-          style={styles.buttonEdit}
-          onPress={() => navigation.navigate("EditProfile")}
+        <Pressable style={styles.buttonCambiar}
+        onPress={() => navigation.navigate("EditProfile")}
         >
-          <Text style={styles.text2}>EDITAR MIS DATOS PERSONALES</Text>
+          <Text style={styles.loremIpsum}>EDITAR MIS DATOS PERSONALES</Text>
         </Pressable>
+        
       </View>
-      <View style={styles.viewAbajo}>
+      {/* <View style={styles.viewAbajo}>
         <View style={styles.viewCedula}>
           <Text style={styles.fotoDeCedula}>Foto de cedula:</Text>
           <Pressable
@@ -107,16 +105,36 @@ function Profile({ navigation }) {
 
           <Text style={styles.cerrarSesion}>CERRAR SESION</Text>
         </Pressable>
-      </View>
-    </ScrollView>
+      </View> */}
+    </View>
+    </View>
+    
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: "100%",
+  mainContainer: {
+    flex: 1,
     backgroundColor: "white",
+    paddingVertical: height * 0.025,
+    paddingHorizontal: width * 0.038
+  },
+  container: {
+    marginTop: 20,
+    backgroundColor: "white",
+    backgroundColor: "white",
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#d6d4d4",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    
+    elevation: 3,
   },
   viewArriba: {
     width: "100%",
@@ -159,7 +177,7 @@ const styles = StyleSheet.create({
   buttonCambiar: {
     height: height * 0.05,
     width: "95%",
-    backgroundColor: "rgba(255,0,70,1)",
+    backgroundColor: "#0073c6",
     borderRadius: 10,
     justifyContent: "center",
     marginVertical: height * 0.02,
@@ -181,7 +199,7 @@ const styles = StyleSheet.create({
   },
   text2: {
     fontFamily: "Roboto_500Medium",
-    color: "rgba(249,10,77,1)",
+    color: "#0073c6",
     fontSize: width * 0.042,
     textAlign: "center",
   },
@@ -243,7 +261,7 @@ const styles = StyleSheet.create({
   },
   cerrarSesion: {
     fontFamily: "Roboto_500Medium",
-    color: "rgba(255,0,45,1)",
+    color: "#0073c6",
     fontSize: width * 0.04,
     textAlign: "center",
   },

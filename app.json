@@ -1,13 +1,12 @@
 {
   "expo": {
-    "name": "Amadita",
-    "slug": "Amadita",
+    "name": "Lab App",
+    "slug": "lab-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      
       "backgroundColor": "#254282"
     },
     "ios": {
@@ -18,15 +17,17 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["INTERNET"],
-      "package": "com.albinr3.Amadita"
+      "permissions": [
+        "INTERNET"
+      ],
+      "package": "com.albinr3.labapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "7263b080-1358-4e54-a601-f6f6e5f0c427"
+        "projectId": "13c591db-2ad4-4260-a01c-5c209c7c72bf"
       }
     }
   }

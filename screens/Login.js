@@ -62,7 +62,8 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Image style={styles.logo} source={require("../assets/icon.png")} />
+      <Image           resizeMode='contain'
+ style={styles.logo} source={require("../assets/images/LABORATORIO-logo.png")} />
       <TextInput
         style={styles.input}
         placeholder="E-mail"
@@ -84,7 +85,7 @@ export default function Login({ navigation }) {
       />
       {/* Display loading indicator or registration button based on isLoading state */}
       {isLoading ? (
-        <ActivityIndicator size="large" color="rgba(253,72,122,1)" />
+        <ActivityIndicator size="large" color="#0073c6" />
       ) : (
         <Pressable style={styles.button} onPress={() => onLoginPress()}>
           <Text style={styles.buttonTitle}>Iniciar sesion</Text>
@@ -115,8 +116,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     
-    height: 120,
-    width: 210,
+    height: 170,
+    width: 260,
     alignSelf: "center",
     marginHorizontal: 30,
     marginTop: 80
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     paddingLeft: 16
   },
   button: {
-    backgroundColor: 'rgba(253,72,122,1)',
+    backgroundColor: '#0073c6',
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
     color: '#2e2e2d'
   },
   footerLink: {
-    color: 'rgba(253,72,122,1)',
+    color: '#0073c6',
     fontWeight: 'bold',
     fontSize: 16
   }

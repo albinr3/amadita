@@ -123,29 +123,32 @@ export default function Home({ navigation }) {
           </View>
         </View> */}
         <View style={styles.viewBotones}>
-          
           <Pressable
             style={styles.buttonResultados}
             onPress={() => navigation.navigate("Results")}
           >
             <FontAwesome name="newspaper-o" style={styles.icon2}></FontAwesome>
-            <Text style={[styles.textButton, {fontSize: 22}]}>Resultados</Text>
+            <Text style={styles.textButtonUp}>
+              Resultados
+            </Text>
           </Pressable>
           <Pressable
             style={styles.buttonFacturar}
             onPress={() => navigation.navigate("Facturar")}
           >
             <FontAwesome name="money" style={styles.icon3}></FontAwesome>
-            <Text style={[styles.textButton, {fontSize: 22}]}>Facturar</Text>
+            <Text style={styles.textButtonUp}>Facturar</Text>
           </Pressable>
           <Pressable
             style={styles.buttonPrueba}
             onPress={() => navigation.navigate("Pruebas")}
           >
             <FontAwesome name="bug" style={styles.iconPrueba}></FontAwesome>
-            <Text style={styles.textButton}>Pruebas</Text>
+            <Text style={styles.textButton}>
+              Pruebas
+            </Text>
           </Pressable>
-          
+
           <Pressable
             style={styles.buttonPerfil}
             onPress={() => navigation.navigate("Profile")}
@@ -155,18 +158,18 @@ export default function Home({ navigation }) {
           </Pressable>
           <Pressable
             style={styles.buttonSucursales}
-            onPress={() => navigation.navigate("BannerCarousel")}
+            onPress={() => navigation.navigate("LocationsMap")}
           >
             <FontAwesome name="map-marker" style={styles.iconMap}></FontAwesome>
             <Text style={styles.textButton}>Sucursales</Text>
           </Pressable>
           <Pressable
-            style={styles.buttonPerfil}
-            onPress={() => navigation.navigate("Profile")}
+            style={styles.buttonBlog}
+            onPress={() => navigation.navigate("BlogList")}
           >
             <MaterialCommunityIcons
               name="image-album"
-              style={styles.icon4}
+              style={styles.iconBlog}
             ></MaterialCommunityIcons>
             <Text style={styles.textButton}>Blog</Text>
           </Pressable>
@@ -184,8 +187,29 @@ const button = {
   marginBottom: 5,
   alignItems: "center",
   justifyContent: "center",
-  flexBasis: "40%"
+  flexBasis: "40%",
 };
+
+const buttonAbajo = {
+  backgroundColor: "#f7fafd",
+  
+  shadowColor: "#000000",
+  shadowOffset: {
+    width: 0,
+    height: 1,
+  },
+  shadowOpacity: 0.22,
+  shadowRadius: 2.22,
+
+  elevation: 3,
+}
+
+const iconButtonsAbajo = {
+  color: "#014d84",
+  fontSize: 38,
+}
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -197,8 +221,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   logo: {
-    width: 80,
-    height: 80,
+    width: 75,
+    height: 75,
   },
   notificationIcon: {
     color: "rgba(128,128,128,1)",
@@ -207,12 +231,13 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   configIconRow: {
-    marginTop: 28,
+    marginTop: 30,
     flexDirection: "row",
     paddingHorizontal: 10,
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "white"
+    backgroundColor: "white",
+    marginBottom: 4,
   },
   rect2: {
     width: "100%",
@@ -251,68 +276,107 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     flexWrap: "wrap",
     marginTop: 20,
-    paddingHorizontal:5
+    paddingHorizontal: 5,
   },
 
-  buttonSucursales: {
-    ...button,
-    backgroundColor: "#DB5B3A",
-    
-  },
+  
 
   textButton: {
     fontFamily: "Roboto_500Medium",
-    color: "rgba(251,248,248,1)",
+    color: "#014d84",
     fontSize: 18,
     alignItems: "center",
     alignSelf: "center",
     marginTop: 0,
   },
-
-  iconMap: {
-    color: "rgba(255,255,255,1)",
-    fontSize: 38,
+  textButtonUp: {
+    fontFamily: "Roboto_500Medium",
+    color: "#ffffff",
+    fontSize: 22,
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: 0,
   },
+  
   buttonResultados: {
     ...button,
     backgroundColor: "#0073c6",
     width: 140,
     height: 140,
-    flexBasis: "47%"
+    flexBasis: "47%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
   },
 
   icon2: {
     color: "rgba(255,255,255,1)",
     fontSize: 48,
   },
-  buttonPrueba: {
-    ...button,
-    backgroundColor: "#DB5B3A",
-  },
 
-  iconPrueba: {
-    color: "rgba(255,255,255,1)",
-    fontSize: 38,
-  },
   buttonFacturar: {
     ...button,
     backgroundColor: "#0073c6",
     width: 140,
     height: 140,
-    flexBasis: "47%"
+    flexBasis: "47%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
   },
   icon3: {
     color: "rgba(255,255,255,1)",
     fontSize: 48,
   },
+
+  buttonPrueba: {
+    ...button,
+    ...buttonAbajo,
+    marginTop: 10,
+  },
+
+  iconPrueba: {
+    ...iconButtonsAbajo
+  },
+  
   buttonPerfil: {
     ...button,
-    backgroundColor: "#DB5B3A",
+    ...buttonAbajo,
+    marginTop: 10,
+    
   },
 
   icon4: {
-    color: "rgba(255,255,255,1)",
-    fontSize: 38,
+    ...iconButtonsAbajo
+  },
+  buttonSucursales: {
+    ...button,
+   ...buttonAbajo
+  },
+
+  iconMap: {
+    ...iconButtonsAbajo
+  },
+
+  buttonBlog: {
+    ...button,
+    ...buttonAbajo
+  },
+
+  iconBlog: {
+    ...iconButtonsAbajo
   },
 
   carouselContainer: {
@@ -323,11 +387,13 @@ const styles = StyleSheet.create({
   bannerContainer: {
     width: width,
     height: width / aspectRatio,
+    paddingHorizontal: 10,
   },
   bannerImage: {
     width: "100%",
     height: "100%",
     contentFit: "cover",
+    borderRadius: 20,
   },
   paginationContainer: {
     // Ajusta este valor para colocar los puntos más arriba o más abajo

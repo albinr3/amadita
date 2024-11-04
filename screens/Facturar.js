@@ -13,10 +13,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 const { width, height } = Dimensions.get("window");
 
-
-
-
-export const Facturar = ({navigation}) => {
+export const Facturar = ({ navigation }) => {
   const [facturas, setFacturas] = useState([
     {
       id: "516490",
@@ -76,10 +73,7 @@ export const Facturar = ({navigation}) => {
     },
   ]);
 
-
-
   const [showPopup, setShowPopup] = useState(false);
-
 
   const renderItem = ({ item: facturaInn }) => {
     return (
@@ -102,26 +96,19 @@ export const Facturar = ({navigation}) => {
           )}
 
           <Text style={styles.textId}>ID: {facturaInn.id}</Text>
-          {facturaInn.fine ? (
-            <View style={styles.ViewButtons}>
-              <Pressable
-                style={styles.buttonVerSolicitud}
-                onPress={() => navigation.navigate("PdfViewer2")}
-              >
-                <Text style={styles.verResultados}>VER SOLICITUD</Text>
-              </Pressable>
-
-              <Pressable
-                style={styles.buttonVerFactura}
-                onPress={() => navigation.navigate("PdfViewer2")}
-              >
-                <Text style={styles.textVerFactura}>VER FACTURA</Text>
-              </Pressable>
-            </View>
-          ) : (
-            <></>
-          )}
         </View>
+        {facturaInn.fine ? (
+          <View style={styles.viewOjo}>
+            <Pressable
+              style={styles.buttonVerFactura}
+              onPress={() => navigation.navigate("PdfViewer2")}
+            >
+              <AntDesign name="eyeo" size={36} color="#0073c6" />
+            </Pressable>
+          </View>
+        ) : (
+          <></>
+        )}
       </View>
     );
   };
@@ -130,7 +117,10 @@ export const Facturar = ({navigation}) => {
     <View style={styles.containerPopup}>
       <Pressable style={styles.overlay} onPress={() => setShowPopup(false)} />
       <View style={styles.whiteBackground}>
-        <Pressable style={styles.buttonConSeguro} onPress={() => navigation.navigate("Solicitud")}>
+        <Pressable
+          style={styles.buttonConSeguro}
+          onPress={() => navigation.navigate("Solicitud")}
+        >
           <Text style={styles.textButtonPopup}>FACTURAR CON SEGURO</Text>
         </Pressable>
         <Pressable style={styles.buttonSinSeguro}>
@@ -191,22 +181,23 @@ const styles = StyleSheet.create({
   viewCirclelogo: {
     width: 53,
     height: 53,
-    backgroundColor: "rgba(255,226,242,0.55)",
+    backgroundColor: "#ecf4fd",
     borderRadius: 100,
     justifyContent: "center",
   },
   icon: {
-    color: "rgba(255,2,143,1)",
+    color: "#0073c6",
     fontSize: 28,
     alignSelf: "center",
   },
   viewTexts: {
     alignSelf: "stretch",
-    flex: 1,
+
     justifyContent: "space-evenly",
     alignItems: "flex-start",
     marginBottom: 10,
     marginTop: 10,
+
   },
   tipoFactura: {
     fontFamily: "Roboto_700Bold",
@@ -223,34 +214,13 @@ const styles = StyleSheet.create({
     color: "#676767e0",
     fontSize: 14,
   },
-  buttonVerSolicitud: {
-    width: 130,
-    height: 35,
-    borderWidth: 1,
-    borderColor: "rgba(211,210,210,1)",
-    borderStyle: "solid",
-    borderRadius: 5,
-    justifyContent: "center",
-    paddingHorizontal: 4,
-    marginRight: 2,
-  },
+
   buttonVerFactura: {
-    width: 130,
-    height: 35,
-    backgroundColor: "rgba(255,2,143,1)",
-    borderStyle: "solid",
-    borderRadius: 5,
-    justifyContent: "center",
+
     paddingHorizontal: 4,
-    marginLeft: 2,
-  },
-  verResultados: {
-    fontFamily: "Roboto_700Bold",
-    color: "rgba(255,2,143,1)",
-    fontSize: 13,
-    textAlign: "center",
     alignSelf: "center",
   },
+
   textVerFactura: {
     fontFamily: "Roboto_700Bold",
     color: "#ffffff",
@@ -267,12 +237,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: "85%",
     height: 40,
-    backgroundColor: "rgba(255,2,143,1)",
+    backgroundColor: "#0073c6",
     borderStyle: "solid",
     borderRadius: 5,
     justifyContent: "center",
     paddingHorizontal: 4,
-    
   },
   textButton: {
     fontFamily: "Roboto_700Bold",
@@ -313,7 +282,7 @@ const styles = StyleSheet.create({
   buttonConSeguro: {
     width: "85%",
     height: 40,
-    backgroundColor: "rgba(255,2,143,1)",
+    backgroundColor: "#0073c6",
     borderRadius: 5,
     justifyContent: "center",
     marginBottom: 10,
@@ -322,7 +291,7 @@ const styles = StyleSheet.create({
     width: "85%",
     height: 40,
     backgroundColor: "#ffffff",
-    borderColor: "rgba(255,2,143,1)",
+    borderColor: "#0073c6",
     borderWidth: 1,
     borderRadius: 5,
     justifyContent: "center",
@@ -339,5 +308,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: "center",
   },
-  
+  viewOjo: {
+    flex: 1,
+    justifyContent: "center",
+  },
 });

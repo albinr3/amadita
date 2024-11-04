@@ -50,7 +50,8 @@ const EditProfile = () => {
   console.log("edit    ", user)
 
   return (
-    <ScrollView
+    <View style={styles.mainContainer}>
+<ScrollView
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
@@ -67,18 +68,18 @@ const EditProfile = () => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
+       <Pressable style={styles.modalContainer} onPress={() => setModalVisible(false)}>
+          <Pressable style={styles.modalContent} onPress={(e) => e.stopPropagation()}>
             <CalendarPicker
               onDateChange={onDateChange}
               width={width * 0.9}
-              scrollable={true}
+              
               initialView={"years"}
             />
 
             <Pressable title="Close" onPress={() => setModalVisible(false)} />
-          </View>
-        </View>
+          </Pressable>
+        </Pressable>
       </Modal>
 
       <View style={styles.viewGenero}>
@@ -133,13 +134,35 @@ const EditProfile = () => {
         <Text style={styles.textoButton}>ACTUALIZAR PERFIL</Text>
       </Pressable>
     </ScrollView>
+    </View>
+    
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
     backgroundColor: "white",
+    paddingVertical: height * 0.025,
+    paddingHorizontal: width * 0.038
+  },
+  container: {
+    marginTop: 20,
+    flex: 1,
+    backgroundColor: "white",
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#d6d4d4",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    
+    elevation: 3,
+    
   },
   contentContainer: {
     paddingHorizontal: width * 0.05,
@@ -176,7 +199,7 @@ const styles = StyleSheet.create({
     marginHorizontal: width * 0.012,
     borderWidth: 1,
     borderColor: "white",
-    backgroundColor: "#e0f7fa",
+    backgroundColor: "#e0edfa",
   },
   buttonFemale: {
     flex: 1,
@@ -193,7 +216,7 @@ const styles = StyleSheet.create({
     fontSize: width < 380 ? 50 : 60,
   },
   iconMale: {
-    color: "#00796b",
+    color: "#0073c6",
     fontSize: width < 380 ? 50 : 60,
   },
   buttonSelected: {
@@ -217,11 +240,11 @@ const styles = StyleSheet.create({
     marginBottom: height * 0.025,
   },
   buttonGuardar: {
-    backgroundColor: "rgba(255,0,70,1)",
+    backgroundColor: "#0073c6",
     paddingVertical: height * 0.02,
     borderRadius: width * 0.02,
     alignItems: "center",
-    shadowColor: "rgba(255,0,70,1)",
+    shadowColor: "#0073c6",
     shadowOffset: { width: 0, height: height * 0.002 },
     shadowOpacity: 0.2,
     shadowRadius: width * 0.02,

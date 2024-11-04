@@ -76,7 +76,7 @@ export default function RegistrationScreen({ navigation }) {
       
         <Image
           style={styles.logo}
-          source={require('../assets/icon.png')}
+          source={require('../assets/images/LABORATORIO-logo.png')}
           resizeMode='contain'
         />
         {/* Input fields for user registration */}
@@ -129,7 +129,7 @@ export default function RegistrationScreen({ navigation }) {
         />
         {/* Display loading indicator or registration button based on isLoading state */}
         {isLoading ? (
-          <ActivityIndicator size="large" color="rgba(253,72,122,1)" />
+          <ActivityIndicator size="large" color="#0073c6" />
         ) : (
           <Pressable
             style={styles.button}
