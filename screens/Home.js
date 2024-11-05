@@ -134,7 +134,7 @@ export default function Home({ navigation }) {
           </Pressable>
           <Pressable
             style={styles.buttonFacturar}
-            onPress={() => navigation.navigate("Facturar")}
+            onPress={() => { Sentry.captureException(new Error('First error')) }}
           >
             <FontAwesome name="money" style={styles.icon3}></FontAwesome>
             <Text style={styles.textButtonUp}>Facturar</Text>

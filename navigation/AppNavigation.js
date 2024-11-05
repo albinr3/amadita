@@ -23,20 +23,17 @@ import Profile from "../screens/Profile";
 import EditProfile from "../screens/EditProfile";
 import { Facturar } from "../screens/Facturar";
 import Solicitud from "../screens/Solicitud";
-import BannerCarousel from "../screens/BannerCarousel"
+import BannerCarousel from "../screens/BannerCarousel";
 import PdfViewer2 from "../screens/PdfViewer2";
 import BlogList from "../screens/BlogList";
 
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { FIREBASE_DB } from "../firebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
-import { FIREBASE_AUTH } from "../firebaseConfig";
-import { signOut } from "firebase/auth";
-
+import { FIREBASE_DB, FIREBASE_AUTH } from "../firebaseConfig";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 // Stack Navigator para pantallas adicionales
 const MainStack = () => (
@@ -47,18 +44,20 @@ const MainStack = () => (
     <Stack.Screen name="Analisis" component={Analisis} />
     <Stack.Screen name="Results" component={Results} options={{ headerTitle: "Resultados" }} />
     <Stack.Screen name="PdfViewer" component={PdfViewer} options={{ headerTitle: "Visor de Análisis" }} />
-    <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerTitle: "Editar Perfil", headerShadowVisible: false, headerTitleStyle: {
-              color: '#0169b3', // Cambia el color del título
-              fontSize: 18 // Puedes agregar otras propiedades, como tamaño de fuente
-            }, }} />
-    <Stack.Screen name="Profile" component={Profile} options={{ headerTitle: "Perfil", headerShadowVisible: false, headerTitleStyle: {
-              color: '#0169b3', // Cambia el color del título
-              fontSize: 18 // Puedes agregar otras propiedades, como tamaño de fuente
-            }, }} />
+    <Stack.Screen name="EditProfile" component={EditProfile} options={{
+      headerTitle: "Editar Perfil",
+      headerShadowVisible: false,
+      headerTitleStyle: { color: "#0169b3", fontSize: 18 },
+    }} />
+    <Stack.Screen name="Profile" component={Profile} options={{
+      headerTitle: "Perfil",
+      headerShadowVisible: false,
+      headerTitleStyle: { color: "#0169b3", fontSize: 18 },
+    }} />
     <Stack.Screen name="Facturar" component={Facturar} options={{ title: "Facturas", headerShown: true }} />
     <Stack.Screen name="Solicitud" component={Solicitud} options={{ title: "Solicitud", headerShown: true }} />
     <Stack.Screen name="Test" component={Test} />
-    <Stack.Screen name="BannerCarousel" component={BannerCarousel} /> 
+    <Stack.Screen name="BannerCarousel" component={BannerCarousel} />
     <Stack.Screen name="PdfViewer2" component={PdfViewer2} options={{ headerTitle: "Visor de Análisis" }} />
     <Stack.Screen name="BlogList" component={BlogList} options={{ headerTitle: "Lista de articulos" }} />
   </Stack.Navigator>
@@ -68,6 +67,7 @@ const MainStack = () => (
 const AppNavigation = () => {
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
+  const [authUser, setAuthUser] = useState(null); // Estado separado para autenticación Firebase
   const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
@@ -75,21 +75,26 @@ const AppNavigation = () => {
 
     const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (userData) => {
       if (userData) {
+        setAuthUser(userData); // Mantener authUser incluso si falla Firestore
+
         const usersCollection = collection(FIREBASE_DB, "users");
         const q = query(usersCollection, where("dataUser.email", "==", userData.email));
-        
+
         try {
           const querySnapshot = await getDocs(q);
           if (!querySnapshot.empty) {
             querySnapshot.forEach((doc) => setUser(doc.data().dataUser));
           } else {
             console.log("No se encontró ningún usuario con ese email.");
+            setUser({ email: userData.email }); // Datos mínimos en caso de error
           }
         } catch (error) {
           console.error("Error al obtener el usuario: ", error);
+          setUser({ email: userData.email }); // Mantener autenticación con datos mínimos
         }
       } else {
-        console.log("No one is logged in");
+        setAuthUser(null);
+        setUser(null);
       }
       setLoading(false);
     });
@@ -101,7 +106,7 @@ const AppNavigation = () => {
     return (
       <Image
         style={styles.splashImage}
-        source={require('../assets/splash.gif')}
+        source={require("../assets/splash.gif")}
         resizeMode="cover"
       />
     );
@@ -112,6 +117,7 @@ const AppNavigation = () => {
       signOut(FIREBASE_AUTH)
         .then(() => {
           console.log("Sign out successful");
+          setAuthUser(null);
           setUser(null);
           props.navigation.closeDrawer();
         })
@@ -140,10 +146,9 @@ const AppNavigation = () => {
           drawerPosition: "right",
           headerShown: false,
         }}
-        initialRouteName={user ? "MainStack" : "Login"}
-        
+        initialRouteName={authUser ? "MainStack" : "Login"} // Usamos authUser para la navegación inicial
       >
-        {user ? (
+        {authUser ? (
           <Drawer.Screen name="MainStack" component={MainStack} options={{ title: "Inicio" }} />
         ) : (
           <>
@@ -159,7 +164,6 @@ const AppNavigation = () => {
 const styles = StyleSheet.create({
   splashImage: {
     ...StyleSheet.absoluteFillObject,
-
     width: width,
     height: height,
   },

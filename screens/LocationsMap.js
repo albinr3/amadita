@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Presable, Linking, Pressable } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Pressable, Linking, Alert } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import * as Location from 'expo-location';
+
 
 const LocationsMap = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [locationPermissionGranted, setLocationPermissionGranted] = useState(false);
 
   const locations = [
     {
@@ -37,8 +40,20 @@ const LocationsMap = () => {
       direccion: "Plaza Sunrise, Pdte. Antonio Guzman Fernandez, Moca",
       horarios: "Lunes-viernes: 7:00AM-4:00PM \n Sabados: 7:00AM - 12:00PM"
     },
-    // Agrega más ubicaciones
   ];
+
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === 'granted') {
+        setLocationPermissionGranted(true);
+      } else {
+        Alert.alert('Permiso denegado', 'Se requiere permiso de ubicación para mostrar el mapa.');
+      }
+    };
+    
+    requestLocationPermission();
+  }, []);
 
   const handleMarkerPress = (location) => {
     setSelectedLocation(location);
@@ -50,26 +65,31 @@ const LocationsMap = () => {
 
   return (
     <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: 19.386947080938835,
-          longitude: -70.53089745733665, 
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
-        }}
-      >
-        {locations.map((location) => (
-          <Marker
-            key={location.id}
-            coordinate={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-            }}
-            onPress={() => handleMarkerPress(location)}
-          />
-        ))}
-      </MapView>
+      {locationPermissionGranted ? (
+        <MapView
+        provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          initialRegion={{
+            latitude: 19.386947080938835,
+            longitude: -70.53089745733665, 
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
+          }}
+        >
+          {locations.map((location) => (
+            <Marker
+              key={location.id}
+              coordinate={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+              }}
+              onPress={() => handleMarkerPress(location)}
+            />
+          ))}
+        </MapView>
+      ) : (
+        <Text style={styles.permissionText}>Esperando permiso de ubicación...</Text>
+      )}
 
       {selectedLocation && (
         <View style={styles.infoWindow}>
@@ -108,7 +128,13 @@ const styles = StyleSheet.create({
   },
   map: {
     width: '100%',
-    height: '80%',  // Ajusta el tamaño del mapa
+    height: '80%',
+  },
+  permissionText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: '#555',
   },
   infoWindow: {
     position: 'absolute',
@@ -150,7 +176,7 @@ const styles = StyleSheet.create({
   phoneText: {
     fontSize: 16,
     marginLeft: 10,
-    color: '#007aff', // Color para indicar que es un enlace clickeable
+    color: '#007aff',
     textDecorationLine: 'underline',
   },
 });
